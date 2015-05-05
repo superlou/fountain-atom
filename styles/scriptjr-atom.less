@@ -1,0 +1,29 @@
+// The ui-variables file is provided by base themes provided by Atom.
+//
+// See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
+// for a full listing of what's available.
+@import "ui-variables";
+
+.scriptjr-atom {
+}
+
+.scriptjr-scene-list {
+  ul {
+    list-style-type: none;
+    padding: 0px 10px;
+
+    span {
+      cursor: default
+    }
+  }
+}
+
+atom-text-editor::shadow {
+  .fountain.scene {
+    color: @text-color-info;
+  }
+
+  .fountain.character {
+    font-weight: bold;
+  }
+}

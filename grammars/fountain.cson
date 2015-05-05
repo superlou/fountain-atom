@@ -1,0 +1,16 @@
+'name': 'Fountain'
+'scopeName': 'fountain.gfm'
+'fileTypes': [
+  'fountain'
+  'ftn'
+]
+'patterns': [
+  {
+    'match': '((EXT)|(INT)|(\\.[A-Z]+)).*$'
+    'name': 'fountain.scene'
+  }
+  {
+    'match': '^[A-Z 0-9\'\(\)\.^]+$'
+    'name': 'fountain.character'
+  }
+]
