@@ -44,10 +44,9 @@ class ScriptjrSceneListView extends ScrollView
           line = $(e.currentTarget).attr('data-line')
 
           position = new Point(line, -1)
-          editor = atom.workspace.getActiveTextEditor()
-          editor.scrollToBufferPosition(position)
-          editor.setCursorBufferPosition(position)
-          editor.moveToFirstCharacterOfLine()
+          @editor.scrollToBufferPosition(position)
+          @editor.setCursorBufferPosition(position)
+          @editor.moveToFirstCharacterOfLine()
 
   findScenes: (text) ->
     scenes = []
@@ -77,7 +76,8 @@ class ScriptjrSceneListView extends ScrollView
 
   changedPane: (pane) =>
     if pane and (typeof pane.getText == 'function')
-      text = pane.getText()
+      @editor = pane
+      text = @editor.getText()
       @updateList(text)
     else
       @clearScenes()

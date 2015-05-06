@@ -30,10 +30,5 @@ module.exports = ScriptjrAtom =
       @sceneListView.panel.hide()
     else
       editor = atom.workspace.getActiveTextEditor()
-
+      @sceneListView.changedPane(editor)
       @sceneListView.panel.show()
-
-      if editor and (typeof editor.getText == 'function')
-        @sceneListView.updateList(editor.getText())
-      else
-        @sceneListView.clearScenes()
