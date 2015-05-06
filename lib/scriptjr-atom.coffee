@@ -7,8 +7,6 @@ module.exports = ScriptjrAtom =
   subscriptions: null
 
   activate: (state) ->
-    @sceneListView = new ScriptjrSceneListView({})
-
     # Events subscribed to in atom's system can be easily cleaned up with
     # a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -26,6 +24,8 @@ module.exports = ScriptjrAtom =
     scriptjrAtomViewState: @scriptjrAtomView.serialize()
 
   toggle: ->
+    @sceneListView ?= new ScriptjrSceneListView({})
+
     if @sceneListView.panel.isVisible()
       @sceneListView.panel.hide()
     else
