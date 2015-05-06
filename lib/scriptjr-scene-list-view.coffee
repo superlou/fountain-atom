@@ -20,7 +20,9 @@ class ScriptjrSceneListView extends ScrollView
 
   @content: ->
     @div class: 'scriptjr-scene-list', tabindex: -1, =>
-      @ul outlet: "list"
+      @div class: 'panel-heading', "Fountain Scene List"
+      @div class: 'panel-body padded', =>
+        @ul class: 'list-group', outlet: "list"
 
   serialize: ->
 
@@ -34,8 +36,11 @@ class ScriptjrSceneListView extends ScrollView
     @list.empty()
 
     for scene in scenes
-      $('<li data-line="'+ scene.line + '">' + scene.title + '</li>')
-        .appendTo(@list).on 'click', (e) =>
+      $('<li data-line="'+ scene.line + '"></li>')
+        .append('<span class="icon icon-book">' + scene.title + '</span>')
+        .addClass('list-item')
+        .appendTo(@list)
+        .on 'click', (e) =>
           line = $(e.currentTarget).attr('data-line')
 
           position = new Point(line, -1)
