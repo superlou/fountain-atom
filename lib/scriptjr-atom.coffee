@@ -8,11 +8,7 @@ module.exports = ScriptjrAtom =
   subscriptions: null
 
   activate: (state) ->
-    @sceneListView = new ScriptjrSceneListView({}, atom.workspace)
-    @sceneListPanel = atom.workspace.addRightPanel {
-      item: @sceneListView.getElement()
-      visible: false
-    }
+    @sceneListView = new ScriptjrSceneListView({})
 
     # Events subscribed to in atom's system can be easily cleaned up with
     # a CompositeDisposable
@@ -31,16 +27,14 @@ module.exports = ScriptjrAtom =
     scriptjrAtomViewState: @scriptjrAtomView.serialize()
 
   toggle: ->
-    console.log 'ScriptjrAtom was toggled!'
-
-    if @sceneListPanel.isVisible()
-      @sceneListPanel.hide()
+    if @sceneListView.panel.isVisible()
+      @sceneListView.panel.hide()
     else
       editor = atom.workspace.getActiveTextEditor()
 
+      @sceneListView.panel.show()
+
       if editor and (typeof editor.getText == 'function')
-        @sceneListView.findScenes(editor.getText())
+        @sceneListView.updateList(editor.getText())
       else
         @sceneListView.clearScenes()
-
-      @sceneListPanel.show()

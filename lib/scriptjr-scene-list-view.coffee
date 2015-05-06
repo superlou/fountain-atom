@@ -1,17 +1,26 @@
-{$, CompositeDisposable, Point} = require 'atom'
+{CompositeDisposable, Point} = require 'atom'
+{$, ScrollView} = require 'atom-space-pen-views'
 
 module.exports =
-class ScriptjrSceneListView
-  constructor: (serializedState, workspace) ->
-    @element = document.createElement('div')
-    $(@element).addClass('scriptjr-scene-list')
-    @list = document.createElement('ul')
-    @element.appendChild(@list)
+class ScriptjrSceneListView extends ScrollView
+  panel: null
 
+  initialize: (state) ->
+    super
     @subscriptions = new CompositeDisposable
-    @subscriptions.add workspace.onDidChangeActivePaneItem(@changedPane)
+    @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
 
-    @workspace = workspace
+    @attach()
+
+  attach: ->
+    @panel ?= atom.workspace.addRightPanel {
+      item: this
+      visible: false
+    }
+
+  @content: ->
+    @div class: 'scriptjr-scene-list', tabindex: -1, =>
+      @ul outlet: "list"
 
   serialize: ->
 
@@ -19,41 +28,33 @@ class ScriptjrSceneListView
     @subscriptions.dispose()
     @element.remove()
 
-  getElement: ->
-    @element
+  updateList: (text) ->
+    scenes = @findScenes(text)
 
-  updateList: (scenes) ->
-    @list.innerHTML = ""
+    @list.empty()
 
     for scene in scenes
-      item = document.createElement('li')
-      span = document.createElement('span')
-      span.innerHTML = scene.title
-      $(span).attr('data-line', scene.line)
-      item.appendChild(span)
+      $('<li data-line="'+ scene.line + '">' + scene.title + '</li>')
+        .appendTo(@list).on 'click', (e) =>
+          line = $(e.currentTarget).attr('data-line')
 
-      @list.appendChild(item)
-
-      $(span).on 'click', (e) =>
-        line = $(e.currentTarget).attr('data-line')
-
-        position = new Point(line, -1)
-        editor = @workspace.getActiveTextEditor()
-        editor.scrollToBufferPosition(position)
-        editor.setCursorBufferPosition(position)
-        editor.moveToFirstCharacterOfLine()
+          position = new Point(line, -1)
+          editor = atom.workspace.getActiveTextEditor()
+          editor.scrollToBufferPosition(position)
+          editor.setCursorBufferPosition(position)
+          editor.moveToFirstCharacterOfLine()
 
   findScenes: (text) ->
     scenes = []
 
     currentScene =
-      line: 0
-      title: 'TOP'
-      hasNote: false
+      line:     0
+      title:    'TOP'
+      hasNote:  false
 
     for line, index in text.split('\n')
       if line.match(/^(EXT)|(INT)|(\^.[A-Z]+)/)
-        scenes.push(currentScene)
+        scenes.push currentScene
 
         currentScene =
           line: index
@@ -64,8 +65,7 @@ class ScriptjrSceneListView
         currentScene.hasNote = true
 
     scenes.push(currentScene)
-
-    @updateList(scenes)
+    scenes
 
   clearScenes: (text) ->
     @list.innerHTML = ""
@@ -73,6 +73,6 @@ class ScriptjrSceneListView
   changedPane: (pane) =>
     if pane and (typeof pane.getText == 'function')
       text = pane.getText()
-      @findScenes(text)
+      @updateList(text)
     else
       @clearScenes()
