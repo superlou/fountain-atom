@@ -10,6 +10,8 @@ class ScriptjrSceneListView extends ScrollView
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
 
+    @editorSubs = new CompositeDisposable
+
     @attach()
 
   attach: ->
@@ -28,9 +30,11 @@ class ScriptjrSceneListView extends ScrollView
 
   destroy: ->
     @subscriptions.dispose()
+    @editorSubs.dispose()
     @element.remove()
 
-  updateList: (text) ->
+  updateList: =>
+    text = @editor.getText()
     scenes = @findScenes(text)
 
     @list.empty()
@@ -75,9 +79,11 @@ class ScriptjrSceneListView extends ScrollView
     @list.innerHTML = ""
 
   changedPane: (pane) =>
+    @editorSubs.dispose()
+
     if pane and (typeof pane.getText == 'function')
       @editor = pane
-      text = @editor.getText()
-      @updateList(text)
+      @editorSubs.add @editor.onDidStopChanging(@updateList)
+      @updateList()
     else
       @clearScenes()
