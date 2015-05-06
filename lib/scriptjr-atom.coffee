@@ -1,4 +1,3 @@
-ScriptjrAtomView = require './scriptjr-atom-view'
 ScriptjrSceneListView = require './scriptjr-scene-list-view'
 {CompositeDisposable} = require 'atom'
 
