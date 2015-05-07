@@ -1,16 +1,180 @@
+# http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/
+
 'name': 'Fountain'
-'scopeName': 'fountain.gfm'
+'scopeName': 'source.fountain'
 'fileTypes': [
   'fountain'
   'ftn'
 ]
+
 'patterns': [
-  {
-    'match': '((EXT)|(INT)|(\\.[A-Z]+)).*$'
-    'name': 'fountain.scene'
-  }
-  {
-    'match': '^[A-Z 0-9\'\(\)\.^]+$'
-    'name': 'fountain.character'
-  }
+  # {
+  #   'match': '((EXT)|(INT)|(\\.[A-Z]+)).*$'
+  #   'name': 'fountain.scene'
+  # }
+  # {
+  #   'match': '^[A-Z 0-9\'\(\)\.^]+$'
+  #   'name': 'fountain.character'
+  # }
+  { 'include': '#comments' }
+  { 'include': '#title_page' }
+  { 'include': '#scene_headings' }
+  { 'include': '#sections' }
+  { 'include': '#synopses' }
+  { 'include': '#transitions' }
+  { 'include': '#dialogue' }
+  { 'include': '#characters' }
+  { 'include': '#markup' }
+  { 'include': '#notes' }
+  { 'include': '#pagebreaks' }
+  { 'include': '#action' }
 ]
+
+'repository': {
+  'action': {
+    'begin': '^([ \\t]*)(?=\\S)'
+    'contentName': 'meta.paragraph.text'
+    'end': '^(?!\\1(?=\\S))'
+    'patterns': [
+      {
+        'match': '(?x)( (https?|s?ftp|ftps|file|smb|afp|nfs|(x-)?man|gopher|txmt):\/\/|mailto:)[-:@a-zA-Z0-9_.,~%+/?=&#]+(?<![.,?:])'
+        'name': 'markup.underline.link.text'
+      }
+      {
+        'include': '#markup'
+      }
+    ]
+  }
+
+  'comments': {
+    'name': 'comment.block.fountain'
+    'begin': '/\\*'
+    'end': '\\*/'
+  }
+
+  'characters': {
+    'name': 'entity.name.character.fountain'
+    'match': '^.[A-Z ().\\-][A-Z0-9 ().\\-]+'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
+  }
+
+  'dialogue': {
+    'contentName': 'string.other.dialogue.fountain'
+    'begin': '([A-Z ().\\-][A-Z0-9 ().\\-]+(\\s*\\^)?$)' # ([A-Z ().\-][A-Z0-9 ().\-]+(\s*\^)?$)
+    'end': '^$'
+    'beginCaptures': {
+      1: {
+        'name': 'entity.name.character.fountain'
+      }
+    }
+    'applyEndPatternLast': 1
+    'patterns': [
+      {
+        'name': 'comment.block.fountain'
+        'begin': '/\\*'
+        'end': '\\-->'
+      }
+      {
+        'name': 'string.other.dialogue.parenthetical.fountain'
+        'match': '^[ ]*\\(.*\\)$'  # ^[ ]*\(.*\)$
+        'patterns': [
+          { 'include': '#nested_parens' }
+        ]
+      }
+      { 'include': '#markup' }
+    ]
+  },
+
+  'nested_parens': {
+    'begin': '('
+    'end': ')'
+    'patterns': [
+      { 'include': '#nested_parens' }
+    ]
+  }
+
+  'notes': {
+    'name': 'entity.other.note.fountain'
+    'begin': '\\[\\['
+    'end': '(^$|\\]\\])'
+  }
+
+  'pagebreaks': {
+    'name': 'entity.other.pagebreak.fountain'
+    'match': '===(=+)?'
+  }
+
+  'title_page': {
+    'begin': '^(?i)(title|credit|authors?|source|draft date|contact|copyright|notes):'
+    'end': '^(?=(?i)(title|credit|authors?|source|draft date|contact|copyright|notes)|$)'
+    'beginCaptures': {
+      1: { 'name': 'keyword.other.title-page.fountain' }
+    }
+    'patterns': [
+      {
+        'name': 'string.other.title-page.fountain'
+        'match': '((?<=:)|\\s+).*$'
+      }
+    ]
+  }
+
+  'transitions': {
+    'name': 'entity.other.transition.fountain'
+    'match': '^\\s*(>.*|[A-Z ]+ TO:)$'
+  }
+
+ 'scene_headings': {
+    'match': '^\\s*(\\..*?|(?:INT|int|EXT|ext|EST|est|INT|int\\.\/EXT|ext|INT|int\/EXT|ext|I\/E|i/e)(?:\\.| ))(.*?)(?<!  )(#[A-Za-z0-9\\-.]+#)?$'
+    'captures': {
+      1: { 'name': 'keyword.other.heading.scene.fountain' }
+      2: { 'name': 'entity.name.heading.scene.fountain' }
+      3: { 'name': 'constant.numeric.scene.fountain' }
+    }
+  }
+
+ # 'sections': {
+ #   'begin': '\\G(#{1,6})(?!#)\\s*(?=\\S)'
+ #   'captures': {
+ #     1: { 'name': 'punctuation.definition.section.fountain' }
+ #   }
+ #   'contentName': 'entity.name.section.fountain'
+ #   'end': '\\s*(#*)$\\n?'
+ #   'name': 'markup.section.fountain'
+ #   'patterns': [
+ #     { 'include': '#inline' }
+ #   ]
+ # }
+ #
+ # 'synopsis': {
+ #   'begin': '\\G(={1,6})(?!=)\\s*(?=\\S)'
+ #   'captures': {
+ #     1: { 'name': 'punctuation.definition.synopsis.fountain' }
+ #   }
+ #   'end': '\\s*(=*)$\\n?'
+ #   'name': 'markup.synopsis.fountain'
+ #   'patterns': [
+ #     { 'include': '#inline' }
+ #   ]
+ # }
+
+ # incomplete
+ # 'markup': {
+ #   'patterns': [
+ #     {
+ #       'name': 'markup.centered.fountain'
+ #       'begin': '^\\s*>(?=.*<)'
+ #       'end': '<$'
+ #       'patterns': [
+ #         { 'include': '#markup' }
+ #       ]
+ #     }
+ #    {
+ #      'name': 'markup.underline.fountain'
+ #      'begin': '_(?=.*_)'
+ #      'end': '_'
+ #      'patterns': [
+ #        { 'include': '#markup' }
+ #      ]
+ #    }
+ #   ]
+ # }
+}

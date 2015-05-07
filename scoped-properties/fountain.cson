@@ -1,0 +1,4 @@
+'.source.fountain':
+  'editor':
+    'softWrap': true
+    'softWrapAtPreferredLineLength': true
