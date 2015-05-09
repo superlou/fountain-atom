@@ -7,5 +7,6 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
-'atom-workspace':
-  'ctrl-alt-o': 'scriptjr-atom:toggle'
+'atom-text-editor':
+  'ctrl-alt-o': 'scriptjr-atom:toggleSceneList'
+  'ctrl-alt-M': 'scriptjr-atom:preview'

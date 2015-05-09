@@ -21,3 +21,179 @@ atom-text-editor::shadow {
     font-weight: bold;
   }
 }
+
+.fountain-preview {
+  overflow: auto;
+  height: 100%;
+  background: white;
+
+  color: #222;
+  cursor: text;
+  letter-spacing: 0 !important;
+  font-family: "Courier Final Draft", "Courier New", Courier, Courier New, monospace;
+  line-height: 107.5%;
+  margin-bottom: 25px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  z-index: 200;
+  font-size: 12pt;
+  padding: 1em;
+
+  .title-page {
+    h1 {
+      margin-top: 200px;
+      margin-bottom: 200px;
+      text-align: center;
+      width: 90.5%;
+      line-height: 120%
+    }
+
+    p.credit {
+      text-align: center;
+      width: 90.5%;
+    }
+
+    p.author, p.authors {
+      margin-bottom: 32px;
+      margin-top: 0;
+      text-align: center;
+      width: 90.5%;
+    }
+
+    p.source {
+      margin-bottom: 32px;
+      text-align: center;
+      width: 90.5%;
+    }
+
+    p.notes {
+      /*bottom: 350px;
+      position: absolute;
+      right: 0;*/
+      text-align: right;
+    }
+
+    p.date, p.draft-date {
+      /*bottom: 250px;
+      position: absolute;
+      right: 0;*/
+      text-align: right;
+    }
+
+    p.contact {
+      /*bottom: 100px;
+      position: absolute;
+      right: 0; */
+      text-align: right;
+    }
+
+    p.copyright {
+      /*bottom: 100px;
+      position: absolute; */
+      text-align: left;
+    }
+  }
+
+  .page {
+    h2 { /* Used for transition */
+      text-align: right;
+      font-size:
+      1em;
+    }
+
+    h2.left-aligned {
+      text-align: left
+    }
+
+    h3 {
+      position: relative;
+
+      &:before {
+        color: #bbb;
+        content: attr(id);
+        font-weight: bold;
+        left: -45px;
+        position: absolute;
+      }
+
+      &:after {
+        color: #bbb;
+        content: attr(id);
+        font-weight: bold;
+        right: -45px;
+        position: absolute;
+      }
+    }
+
+    div.dialogue {
+      margin-left: auto;
+      margin-right: auto;
+      width: 68%;
+
+      h4 {
+        margin-bottom: 0;
+        margin-left: 23%;
+      }
+
+      p.parenthetical {
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-left: 11%;
+      }
+
+      p {
+        margin-bottom: 0;
+        margin-top: 0;
+      }
+    }
+
+    div.dual-dialogue {
+      margin: 2em 0 0.9em 2%;
+      width: 95%;
+
+      div.dialogue {
+        display: inline-block;
+        margin: 0;
+        width: 45%;
+      }
+
+      div.dialogue h4 {
+        margin-top: 0;
+      }
+
+      div.dialogue.right {
+        float: right;
+      }
+    }
+
+    p { }
+
+    p.centered {
+      text-align: center;
+      width: 92.5%;
+    }
+
+    p.section {
+      color: #bbb;
+      margin-left: -30px;
+    }
+
+    p.synopsis {
+      color: #bbb;
+      margin-left: -20px;
+    }
+
+    span.italic {
+      font-style: italic;
+    }
+
+    span.bold {
+      font-weight: bold;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+  }
+}

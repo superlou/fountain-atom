@@ -5,6 +5,10 @@
       'label': 'Toggle scriptjr-atom'
       'command': 'scriptjr-atom:toggle'
     }
+    {
+      'label': 'Preview Fountain.io script'
+      'command': 'scriptjr-atom:preview'
+    }
   ]
 'menu': [
   {
