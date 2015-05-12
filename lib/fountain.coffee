@@ -1,7 +1,7 @@
-FountainSceneListView = require './fountain-scene-list-view'
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
+FountainSceneListView = null
 FountainPreviewView = null
 renderer = null
 
@@ -61,6 +61,7 @@ module.exports = Fountain =
     fountainViewState: @fountainView.serialize()
 
   toggleSceneList: ->
+    FountainSceneListView ?= require './fountain-scene-list-view'
     @sceneListView ?= new FountainSceneListView({})
 
     if @sceneListView.panel.isVisible()
