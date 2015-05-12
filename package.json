@@ -1,7 +1,7 @@
 {
   "name": "fountain",
   "main": "./lib/fountain",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
   "repository": "https://github.com/superlou/fountain-atom",
   "license": "GPLv3",
