@@ -45,7 +45,7 @@ class FountainSceneListView extends ScrollView
         .addClass('list-item')
         .appendTo(@list)
         .on 'click', (e) =>
-          line = $(e.currentTarget).attr('data-line')
+          line = parseInt($(e.currentTarget).attr('data-line'))
 
           position = new Point(line, -1)
           @editor.scrollToBufferPosition(position)
