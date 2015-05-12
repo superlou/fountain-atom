@@ -1,10 +1,10 @@
 {
-  "name": "scriptjr-atom",
-  "main": "./lib/scriptjr-atom",
-  "version": "0.0.0",
-  "description": "A short description of your package",
-  "repository": "https://github.com/atom/scriptjr-atom",
-  "license": "MIT",
+  "name": "fountain",
+  "main": "./lib/fountain",
+  "version": "0.1.0",
+  "description": "Grammar and tools for the Fountain screenwriting syntax",
+  "repository": "https://github.com/superlou/fountain-atom",
+  "license": "GPLv3",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },

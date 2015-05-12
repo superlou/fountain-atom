@@ -1,7 +1,7 @@
 {Emitter, Disposable, CompositeDisposable} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
 _ = require 'underscore-plus'
-fountain = require './fountain'
+fountainParser = require './vendor/fountain-parser'
 
 module.exports =
 class FountainPreviewView extends ScrollView
@@ -114,7 +114,7 @@ class FountainPreviewView extends ScrollView
       renderer.toHTML source, @getPath(), @getGrammar(), callback
 
   renderFountainText: (text) ->
-    fountain.parse text, (output) =>
+    fountainParser.parse text, (output) =>
       html = "<div class='title-page'>#{output.html.title_page}</div>"
       html += "<div class='page'>#{output.html.script}</div>"
 
@@ -122,7 +122,7 @@ class FountainPreviewView extends ScrollView
       @loaded = true
       @html(html)
       @emitter.emit 'did-change-fountain'
-      @originalTrigger('scriptjr-atom:fountain-changed')
+      @originalTrigger('fountain:fountain-changed')
 
   getPath: ->
     if @file?

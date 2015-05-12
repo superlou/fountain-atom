@@ -1,5 +1,5 @@
-ScriptjrAtomView = require '../lib/scriptjr-atom-view'
+FountainView = require '../lib/fountain-view'
 
-describe "ScriptjrAtomView", ->
+describe "FountainView", ->
   it "has one valid test", ->
     expect("life").toBe "easy"

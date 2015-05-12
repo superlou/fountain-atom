@@ -2,7 +2,7 @@
 {$, ScrollView} = require 'atom-space-pen-views'
 
 module.exports =
-class ScriptjrSceneListView extends ScrollView
+class FountainSceneListView extends ScrollView
   panel: null
 
   initialize: (state) ->
@@ -21,7 +21,7 @@ class ScriptjrSceneListView extends ScrollView
     }
 
   @content: ->
-    @div class: 'scriptjr-scene-list', tabindex: -1, =>
+    @div class: 'fountain-scene-list', tabindex: -1, =>
       @div class: 'panel-heading', "Fountain Scene List"
       @div class: 'panel-body padded', =>
         @ul class: 'list-group', outlet: "list"

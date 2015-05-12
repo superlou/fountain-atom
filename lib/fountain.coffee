@@ -1,4 +1,4 @@
-ScriptjrSceneListView = require './scriptjr-scene-list-view'
+FountainSceneListView = require './fountain-scene-list-view'
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
@@ -19,8 +19,8 @@ atom.deserializers.add
     createFountainPreviewView(state) if state.constructor is Object
 
 
-module.exports = ScriptjrAtom =
-  scriptjrAtomView: null
+module.exports = Fountain =
+  fountainView: null
   modalPanel: null
   subscriptions: null
 
@@ -31,8 +31,8 @@ module.exports = ScriptjrAtom =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'scriptjr-atom:toggleSceneList': => @toggleSceneList(),
-      'scriptjr-atom:preview' :=> @preview()
+      'fountain:toggleSceneList': => @toggleSceneList(),
+      'fountain:preview' :=> @preview()
 
     atom.workspace.addOpener (uri) ->
       try
@@ -40,7 +40,7 @@ module.exports = ScriptjrAtom =
       catch error
         return
 
-      return unless protocol is 'scriptjr-atom-preview:'
+      return unless protocol is 'fountain-preview:'
 
       try
         pathname = decodeURI(pathname) if pathname
@@ -55,13 +55,13 @@ module.exports = ScriptjrAtom =
   deactivate: ->
     @modalPanel.destroy()
     @subscriptions.dispose()
-    @scriptjrAtomView.destroy()
+    @fountainView.destroy()
 
   serialize: ->
-    scriptjrAtomViewState: @scriptjrAtomView.serialize()
+    fountainViewState: @fountainView.serialize()
 
   toggleSceneList: ->
-    @sceneListView ?= new ScriptjrSceneListView({})
+    @sceneListView ?= new FountainSceneListView({})
 
     if @sceneListView.panel.isVisible()
       @sceneListView.panel.hide()
@@ -77,7 +77,7 @@ module.exports = ScriptjrAtom =
     @addPreviewForEditor(editor)
 
   uriForEditor: (editor) ->
-    "scriptjr-atom-preview://editor/#{editor.id}"
+    "fountain-preview://editor/#{editor.id}"
 
   addPreviewForEditor: (editor) ->
     uri = @uriForEditor(editor)

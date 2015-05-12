@@ -2,23 +2,23 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle scriptjr-atom'
-      'command': 'scriptjr-atom:toggle'
+      'label': 'Toggle fountain'
+      'command': 'fountain:toggle'
     }
     {
       'label': 'Preview Fountain.io script'
-      'command': 'scriptjr-atom:preview'
+      'command': 'fountain:preview'
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'scriptjr-atom'
+      'label': 'fountain'
       'submenu': [
         {
           'label': 'Toggle'
-          'command': 'scriptjr-atom:toggle'
+          'command': 'fountain:toggle'
         }
       ]
     ]

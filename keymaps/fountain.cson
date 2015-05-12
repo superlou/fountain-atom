@@ -8,5 +8,5 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-text-editor':
-  'ctrl-alt-o': 'scriptjr-atom:toggleSceneList'
-  'ctrl-alt-M': 'scriptjr-atom:preview'
+  'ctrl-alt-o': 'fountain:toggleSceneList'
+  'ctrl-alt-M': 'fountain:preview'
