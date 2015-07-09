@@ -2,8 +2,9 @@
 This package aims to provide syntax highlighting and utilities to improve the experience of screenwriting with the [Fountain](http://fountain.io/) syntax.
 
 Features:
-* Scene list navigator
-* Formatted preview
+* Scene list navigator (ctrl+alt+o)
+* Formatted preview (ctrl+alt+M)
+* Symbol listing (ctrl+r, via symbols-view package)
 
 ## Development
 This is currently a work in progress, pulling from a few different tools:
