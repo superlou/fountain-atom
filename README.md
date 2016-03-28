@@ -3,6 +3,7 @@ This package aims to provide syntax highlighting and utilities to improve the ex
 
 Features:
 * Scene list navigator (ctrl+alt+o)
+* Outline list navigator (ctrl+alt+h)
 * Formatted preview (ctrl+alt+M)
 * Symbol listing (ctrl+r, via symbols-view package)
 
