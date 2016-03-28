@@ -9,4 +9,5 @@
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-text-editor':
   'ctrl-alt-o': 'fountain:toggleSceneList'
+  'ctrl-alt-h': 'fountain:toggleOutlineView'
   'ctrl-alt-M': 'fountain:preview'
