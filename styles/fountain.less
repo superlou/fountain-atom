@@ -4,8 +4,73 @@
 // for a full listing of what's available.
 @import "ui-variables";
 
-.fountain {
+/* fountain outline view styles */
+.fountain-outline-view {
+  width: 450px;
+  overflow: scroll;
+  cursor: default;
 }
+
+.outline-list {
+  margin: 0;
+  padding: 5px;
+  cursor: default;
+}
+
+.outline-ul {
+  list-style-type: none !important;
+  padding-left: 15px;
+}
+
+.outline-li {
+    white-space: normal;
+    font-size: 11px;
+}
+
+.heading1 {
+  font-size: 18pt;
+  margin-bottom: 3px;
+  color: #858585;
+}
+
+.heading2 {
+  font-size: 16pt;
+  margin-bottom: 3px;
+  color: #858585;
+}
+
+.heading3, .heading4, .heading5, .heading6 {
+  font-size: 14pt;
+  margin-bottom: 3px;
+  color: #8C8C8C;
+}
+
+ul.outline-list > li.outline-li > ul.outline-ul {
+  padding: 0;
+  margin: 0;
+}
+
+.synopsis {
+  font-style: italic;
+  color: #8B864E;
+  font-size: 8pt;
+}
+
+#showScenesCheckbox {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
+  vertical-align: text-bottom;
+}
+
+.show-scenes-box {
+  position: relative;
+  float: right;
+}
+
+
+/* fountain scene list styles */
 
 .fountain-scene-list {
   overflow: auto;
