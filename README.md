@@ -16,4 +16,4 @@ This is currently a work in progress, pulling from a few different tools:
 Please open issues with feature requests that would improve your work flow.
 
 ##Outline view in action:
-![outline view](https://raw.github.com/superlou/fountain-atom/blob/outlook-view/screenshot.gif)
+![outline view](https://github.com/superlou/fountain-atom/blob/outlook-view/screenshot.gif?raw=true)
