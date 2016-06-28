@@ -62,17 +62,6 @@ module.exports = Fountain =
   #serialize: ->
     #fountainViewState: @fountainView.serialize()
 
-  toggleSceneList: ->
-    FountainSceneListView ?= require './fountain-scene-list-view'
-    @sceneListView ?= new FountainSceneListView({})
-
-    if @sceneListView.panel.isVisible()
-      @sceneListView.panel.hide()
-    else
-      editor = atom.workspace.getActiveTextEditor()
-      @sceneListView.changedPane(editor)
-      @sceneListView.panel.show()
-
   toggleOutlineView: ->
     FountainOutlineView ?= require './fountain-outline-view'
     @outlineView ?= new FountainOutlineView({})
