@@ -1,7 +1,7 @@
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
-FountainSceneListView = null
+FountainOutlineView = null
 FountainPreviewView = null
 renderer = null
 
@@ -31,7 +31,7 @@ module.exports = Fountain =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'fountain:toggleSceneList': => @toggleSceneList(),
+      'fountain:toggleOutlineView': => @toggleOutlineView(),
       'fountain:preview' :=> @preview()
 
     atom.workspace.addOpener (uri) ->
@@ -57,19 +57,19 @@ module.exports = Fountain =
     @subscriptions.dispose()
     @fountainView.destroy()
 
-  serialize: ->
-    fountainViewState: @fountainView.serialize()
+  #serialize: ->
+    #fountainViewState: @fountainView.serialize()
 
-  toggleSceneList: ->
-    FountainSceneListView ?= require './fountain-scene-list-view'
-    @sceneListView ?= new FountainSceneListView({})
+  toggleOutlineView: ->
+    FountainOutlineView ?= require './fountain-outline-view'
+    @outlineView ?= new FountainOutlineView({})
 
-    if @sceneListView.panel.isVisible()
-      @sceneListView.panel.hide()
+    if @outlineView.panel.isVisible()
+      @outlineView.panel.hide()
     else
       editor = atom.workspace.getActiveTextEditor()
-      @sceneListView.changedPane(editor)
-      @sceneListView.panel.show()
+      @outlineView.changedPane(editor)
+      @outlineView.panel.show()
 
   preview: ->
     editor = atom.workspace.getActiveTextEditor()
