@@ -1,7 +1,6 @@
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
-FountainSceneListView = null
 FountainOutlineView = null
 FountainPreviewView = null
 renderer = null
@@ -32,7 +31,6 @@ module.exports = Fountain =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'fountain:toggleSceneList': => @toggleSceneList(),
       'fountain:toggleOutlineView': => @toggleOutlineView(),
       'fountain:preview' :=> @preview()
 
