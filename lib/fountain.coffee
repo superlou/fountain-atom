@@ -1,6 +1,7 @@
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
+#FountainSceneListView = null
 FountainOutlineView = null
 FountainPreviewView = null
 renderer = null
@@ -57,8 +58,19 @@ module.exports = Fountain =
     @subscriptions.dispose()
     @fountainView.destroy()
 
-  #serialize: ->
-    #fountainViewState: @fountainView.serialize()
+  serialize: ->
+    fountainViewState: @fountainView.serialize()
+
+  #toggleSceneList: ->
+  #  FountainSceneListView ?= require './fountain-scene-list-view'
+  #  @sceneListView ?= new FountainSceneListView({})
+
+  # if @sceneListView.panel.isVisible()
+  #    @sceneListView.panel.hide()
+  #  else
+  #    editor = atom.workspace.getActiveTextEditor()
+  #    @sceneListView.changedPane(editor)
+  #    @sceneListView.panel.show()
 
   toggleOutlineView: ->
     FountainOutlineView ?= require './fountain-outline-view'
