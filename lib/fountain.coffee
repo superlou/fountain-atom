@@ -100,6 +100,6 @@ module.exports = Fountain =
       searchAllPanes: true
       split: 'right'
 
-    atom.workspace.open(uri, options).done (fountainPreviewView) ->
+    atom.workspace.open(uri, options).then (fountainPreviewView) ->
       if isFountainPreviewView(fountainPreviewView)
         previousActivePane.activate()
