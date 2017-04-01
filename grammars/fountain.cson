@@ -54,12 +54,12 @@
 
   'characters': {
     'name': 'entity.name.character.fountain'
-    'match': '^.[A-Z ().\\-][A-Z0-9 ().\\-]+'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
+    'match': '^.[\\p{Lu} ().\\-][\\p{Lu}0-9 ().\\-]+$'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
   }
 
   'dialogue': {
     'contentName': 'string.other.dialogue.fountain'
-    'begin': '([A-Z ().\\-][A-Z0-9 ().\\-]+(\\s*\\^)?$)' # ([A-Z ().\-][A-Z0-9 ().\-]+(\s*\^)?$)
+    'begin': '([\\p{Lu} ().\\-][\\p{Lu}0-9 ().\\-]+(\\s*\\^)?$)' # ([A-Z ().\-][A-Z0-9 ().\-]+(\s*\^)?$)
     'end': '^$'
     'beginCaptures': {
       1: {

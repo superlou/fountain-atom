@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.0",
-    "underscore-plus": "^1.0.0"
+    "underscore-plus": "^1.0.0",
+    "xregexp": "^3.1.1"
   },
   "readme": "# Fountain Support for Atom\nThis package aims to provide syntax highlighting and utilities to improve the experience of screenwriting with the [Fountain](http://fountain.io/) syntax.\n\nFeatures:\n* Scene list navigator (ctrl+alt+o)\n* Formatted preview (ctrl+alt+M)\n* Symbol listing (ctrl+r, via symbols-view package)\n\n## Development\nThis is currently a work in progress, pulling from a few different tools:\n\n* HTML preview support from [Fountain.js](https://github.com/mattdaly/Fountain.js)\n* Syntax highlighting based on [The Candler Blog](http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/)\n\nPlease open issues with feature requests that would improve your work flow.\n",
   "readmeFilename": "README.md",
