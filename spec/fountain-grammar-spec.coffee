@@ -1,0 +1,9 @@
+grammarTest = require 'atom-grammar-test'
+
+describe 'My Grammar', ->
+  beforeEach ->
+    # Ensure you're language package is loaded
+    waitsForPromise ->
+      atom.packages.activatePackage 'fountain',
+
+  grammarTest('spec/grammar-tests.fountain')

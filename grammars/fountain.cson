@@ -71,7 +71,7 @@
       {
         'name': 'comment.block.fountain'
         'begin': '/\\*'
-        'end': '\\-->'
+        'end': '\\*/'
       }
       {
         'name': 'string.other.dialogue.parenthetical.fountain'
