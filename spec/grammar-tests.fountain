@@ -1,7 +1,24 @@
-// SYNTAX TEST "Fountain"
+/* SYNTAX TEST "source.fountain" */
 MOM (O. S.)
-// <- fountain.test
+/*^ entity.name.character.fountain */
 Luke! Come down for supper!
+/*^ string.other.dialogue.fountain */
 
-HANS (on the radio)
-What was it you said?
+INT. - A ROOM
+/*^ keyword.other.heading.scene.fountain */
+
+The room is boring and nearly empty.  Also, there's a cat.
+
+GÜNTHER
+/*^ entity.name.character.fountain */
+Hello.  I'm a cat with unicode characters in my name.
+
+BOLÂO
+/*^ entity.name.character.fountain */
+My name has unicode in it, too!
+
+JOHN (V.O.)
+/*^ entity.name.character.fountain */
+My name has none of those fancy characters.
+
+JOHN's name right here shouldn't be a character since there's more text that's not uppercase following it.  This should be fixed now, too.

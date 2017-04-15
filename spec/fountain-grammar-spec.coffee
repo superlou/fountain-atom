@@ -1,6 +1,6 @@
 grammarTest = require 'atom-grammar-test'
 
-describe 'My Grammar', ->
+describe 'Fountain Grammar', ->
   beforeEach ->
     # Ensure you're language package is loaded
     waitsForPromise ->

@@ -980,6 +980,6 @@
     ]
   },
   "devDependencies": {
-    "atom-grammar-test": "^0.6.3"
+    "atom-grammar-test": "^0.6.4"
   }
 }
