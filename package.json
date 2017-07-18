@@ -1,7 +1,7 @@
 {
   "name": "fountain",
   "main": "./lib/fountain",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
   "repository": {
     "type": "git",
