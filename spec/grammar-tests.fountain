@@ -28,3 +28,4 @@ INT. - DIALOGUE SYNTAX HIGHLIGHT NEEDS TO WORK WITH "CONT'D"
 PERSON (CONT'D)
 /*^ entity.name.character.fountain */
 Hello world!
+/*^ string.other.dialogue.fountain */
