@@ -54,7 +54,7 @@
 
   'characters': {
     'name': 'entity.name.character.fountain'
-    'match': '^.[\\p{Lu} ().\\-][\\p{Lu}0-9 ().\\-]+$'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
+    'match': '^.[\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+$'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
   }
 
   'dialogue': {

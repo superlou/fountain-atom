@@ -22,3 +22,9 @@ JOHN (V.O.)
 My name has none of those fancy characters.
 
 JOHN's name right here shouldn't be a character since there's more text that's not uppercase following it.  This should be fixed now, too.
+
+INT. - DIALOGUE SYNTAX HIGHLIGHT NEEDS TO WORK WITH "CONT'D"
+
+PERSON (CONT'D)
+/*^ entity.name.character.fountain */
+Hello world!
