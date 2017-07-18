@@ -3,7 +3,7 @@ This package aims to provide syntax highlighting and utilities to improve the ex
 
 Features:
 * Outline list navigator (ctrl+alt+o)
-* Formatted preview (ctrl+alt+M)
+* Formatted preview (ctrl+alt+shift+m)
 * Symbol listing (ctrl+r, via symbols-view package)
 
 ## Development
