@@ -1,10 +1,10 @@
 # Fountain Support for Atom
 This package aims to provide syntax highlighting and utilities to improve the experience of screenwriting with the [Fountain](http://fountain.io/) syntax.
 
-Features:
-* Outline list navigator (ctrl+alt+o)
-* Formatted preview (ctrl+alt+M)
-* Symbol listing (ctrl+r, via symbols-view package)
+## Features:
+* Outline list navigator (<kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>o</kbd>)
+* Formatted preview (<kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>m</kbd>)
+* Symbol listing (<kbd>crtl</kbd>+<kbd>r</kbd>, via the [symbols-view package](https://github.com/atom/symbols-view))
 
 ## Development
 This is currently a work in progress, pulling from a few different tools:
@@ -14,5 +14,5 @@ This is currently a work in progress, pulling from a few different tools:
 
 Please open issues with feature requests that would improve your work flow.
 
-##Outline view in action:
+## Outline view in action:
 ![outline view](https://github.com/superlou/fountain-atom/blob/outlook-view/screenshot.gif?raw=true)
