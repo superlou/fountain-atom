@@ -4,6 +4,10 @@
 module.exports =
 class FountainOutlineView extends ScrollView
   panel: null
+  Sortable = require('sortablejs')
+  fs = require('fs')
+  _ = require('underscore')
+  outlineLocked = true
 
   initialize: (state) ->
     super
@@ -22,7 +26,10 @@ class FountainOutlineView extends ScrollView
 
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
-      @div class: 'panel-heading', "Fountain Outline"
+      @div class: 'panel-heading', "Fountain Outline", =>
+        @span class: 'outline-lock', =>
+          @span id: 'outlineLocked', class: 'icon icon-lock'
+          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
       @div class: 'show-scenes-box', =>
         @label for: 'showScenesCheckbox', "Hide Scenes:"
         @input id: 'showScenesCheckbox', type: 'checkbox'
@@ -45,6 +52,63 @@ class FountainOutlineView extends ScrollView
     tempList =  @formatList(scenes)
     @list.append(tempList)
 
+    updateList = @updateList
+    el = document.getElementsByClassName('outline-ul')[0];
+
+    sceneList = _.where(scenes, {type: 'scene'} )
+    oldStartLine = null
+    oldEndLine = null
+    sortable = Sortable.create(el, {
+      onChoose: (evt) ->
+        sceneCount = _.where(scenes, {type: 'scene'} ).length
+        oldStartLine = parseInt(evt.item.attributes[1].value)
+        if evt.oldIndex == sceneCount - 1
+          oldEndLine = text.split('\n').length
+        else
+          # assuming exclusive
+          oldEndLine = parseInt(sceneList[evt.oldIndex+1].line)
+
+      onUpdate: (evt) ->
+        oldIndex = evt.oldIndex
+        newIndex = evt.newIndex
+        if (oldIndex != newIndex)
+
+          oldFileLines = text.split('\n')
+
+          if (newIndex > oldIndex)
+            newIndex += 1
+          if (sceneList[newIndex])
+            newStartLine = parseInt(sceneList[newIndex].line)
+          else
+            newStartLine = oldFileLines.length - 1
+
+          newFileText = ''
+
+          movingText = oldFileLines.slice(oldStartLine, oldEndLine)
+
+          console.log(movingText)
+
+          movingTextLength = oldEndLine - oldStartLine
+          textBefore = oldFileLines.slice(0, oldStartLine)
+          textAfter = oldFileLines.slice(oldEndLine)
+
+          if newStartLine < textBefore.length
+            textBefore.splice.apply(textBefore, [newStartLine, 0].concat(movingText))
+          else
+            textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingTextLength, 0].concat(movingText))
+
+          newFileText = textBefore.concat(textAfter).join('\n')
+
+          dirPath = atom.project.getPaths()[0]
+          fs.writeFile(dirPath + "/testConversion.fountain", newFileText, (err)  ->
+              if err
+                return console.log(err)
+              console.log("The file was saved!")
+          )
+
+          updateList()
+    });
+
     #Add the click event handler
     $(".outline-item")
       .on 'click', (e) =>
@@ -61,6 +125,16 @@ class FountainOutlineView extends ScrollView
           $('li.scene').hide()
         else
           $('li.scene').show()
+
+    sortable.option("disabled", outlineLocked)
+    $(".outline-lock")
+      .on 'click', (e) ->
+        outlineLocked = !outlineLocked
+        if (outlineLocked)
+          $('.outline-lock-overlay-icon').css("visibility", "hidden");
+        else
+          $('.outline-lock-overlay-icon').css("visibility", "visible");
+        sortable.option("disabled", outlineLocked);
 
   formatList: (scenes) ->
     formatted = '<li class="outline-li outline-li "><ul class="outline-ul">'
