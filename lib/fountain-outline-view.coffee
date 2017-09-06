@@ -55,62 +55,12 @@ class FountainOutlineView extends ScrollView
     tempList =  @formatList(scenes)
     @list.append(tempList)
 
-    el = document.getElementsByClassName('outline-ul')[0];
+    sortable = @createSortableList(text, scenes)
 
-    oldFileLines = text.split('\n')
-    sceneList = _.where(scenes, {type: 'scene'} )
-    oldStartLine = null
-    oldEndLine = null
-    sortable = Sortable.create(el, {
-      onChoose: (evt) ->
-        sceneCount = sceneList.length
-        oldStartLine = parseInt(evt.item.attributes[1].value)
-        if evt.oldIndex == sceneCount - 1
-          oldEndLine = oldFileLines.length
-        else
-          # assuming exclusive
-          oldEndLine = parseInt(sceneList[evt.oldIndex+1].line)
-
-      onUpdate: (evt) =>
-        oldIndex = evt.oldIndex
-        newIndex = evt.newIndex
-        if (oldIndex != newIndex)
-
-          if (newIndex > oldIndex)
-            newIndex += 1
-          if (sceneList[newIndex])
-            newStartLine = parseInt(sceneList[newIndex].line)
-          else
-            newStartLine = oldFileLines.length - 1
-
-          newFileText = ''
-
-          movingText = oldFileLines.slice(oldStartLine, oldEndLine)
-
-          movingTextLength = oldEndLine - oldStartLine
-          textBefore = oldFileLines.slice(0, oldStartLine)
-          textAfter = oldFileLines.slice(oldEndLine)
-
-          if newStartLine < textBefore.length
-            textBefore.splice.apply(textBefore, [newStartLine, 0].concat(movingText))
-          else
-            textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingTextLength, 0].concat(movingText))
-
-          newFileText = textBefore.concat(textAfter).join('\n')
-
-          dirPath = atom.project.getPaths()[0]
-          fs.writeFile(dirPath + "/testConversion.fountain", newFileText, (err)  ->
-              if err
-                return console.log(err)
-              console.log("The file was saved!")
-          )
-
-          @updateList()
-    });
+    # EVENT HANDLER MANAGEMENT #
 
     @clearEventHandlers()
 
-    #Add the click event handler
     jumpToHandler = $(".outline-item")
       .on 'click', (e) =>
         line = parseInt($(e.currentTarget).attr('data-line'))
@@ -210,6 +160,10 @@ class FountainOutlineView extends ScrollView
   clearScenes: (text) ->
     @list.innerHTML = ""
 
+  clearEventHandlers: () ->
+    _.each(@eventHandlers, (handler) -> handler.off())
+    @eventHandlers = []
+
   changedPane: (pane) =>
     @editorSubs.dispose()
     if pane and (typeof pane.getText == 'function')
@@ -219,12 +173,69 @@ class FountainOutlineView extends ScrollView
     else
       @clearScenes()
 
-  clearEventHandlers: () ->
-    _.each(@eventHandlers, (handler) -> handler.off())
-    @eventHandlers = []
+  createSortableList: (fileText, scenes) =>
+
+    outlineElement = document.getElementsByClassName('outline-ul')[0];
+    oldFileLines = fileText.split('\n')
+    sceneList = _.where(scenes, {type: 'scene'} )
+
+    oldStartLine = null
+    oldEndLine = null
+
+    sortable = Sortable.create(outlineElement, {
+
+      onChoose: (evt) ->
+        # grab details about scene before array mutates
+        sceneCount = sceneList.length
+        oldStartLine = parseInt(evt.item.attributes[1].value)
+        if evt.oldIndex == sceneCount - 1
+          oldEndLine = oldFileLines.length
+        else
+          oldEndLine = parseInt(sceneList[evt.oldIndex+1].line)
+
+      onUpdate: (evt) =>
+        # scene moved, so generate new file #
+        oldIndex = evt.oldIndex
+        newIndex = evt.newIndex
+
+        # account for array index changes
+        if (newIndex > oldIndex)
+          newIndex += 1
+        if (sceneList[newIndex])
+          newStartLine = parseInt(sceneList[newIndex].line)
+        else
+          newStartLine = oldFileLines.length - 1
+
+        # isolate relevant chunks
+        newFileText = ''
+        movingText = oldFileLines.slice(oldStartLine, oldEndLine)
+        textBefore = oldFileLines.slice(0, oldStartLine)
+        textAfter = oldFileLines.slice(oldEndLine)
+
+        # determine placement of text in preceding or trailing slice
+        if newStartLine < textBefore.length
+          textBefore.splice.apply(textBefore, [newStartLine, 0].concat(movingText))
+        else
+          textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingText.length, 0].concat(movingText))
+
+        newFileText = textBefore.concat(textAfter).join('\n')
+        @writeNewFile(newFileText)
+
+        @updateList()
+
+    })
+    sortable
+
+  writeNewFile: (newFileText) =>
+    dirPath = atom.project.getPaths()[0]
+    fs.writeFile(dirPath + "/testConversion.fountain", newFileText, (err)  ->
+      if err
+        return console.log(err)
+      console.log("The file was saved!")
+    )
 
   setOutlineLockIconState: () =>
-      if (@outlineLocked)
-          $('.outline-lock-overlay-icon').css("visibility", "hidden");
-        else
-          $('.outline-lock-overlay-icon').css("visibility", "visible");
+    if (@outlineLocked)
+        $('.outline-lock-overlay-icon').css("visibility", "hidden");
+      else
+        $('.outline-lock-overlay-icon').css("visibility", "visible");
