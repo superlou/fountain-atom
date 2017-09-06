@@ -5,7 +5,6 @@ module.exports =
 class FountainOutlineView extends ScrollView
 
   Sortable = require('sortablejs')
-  fs = require('fs')
   _ = require('underscore')
 
   panel: null
@@ -219,20 +218,16 @@ class FountainOutlineView extends ScrollView
           textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingText.length, 0].concat(movingText))
 
         newFileText = textBefore.concat(textAfter).join('\n')
-        @writeNewFile(newFileText)
+        @setActiveEditorBuffer(newFileText)
 
         @updateList()
 
     })
     sortable
 
-  writeNewFile: (newFileText) =>
-    dirPath = atom.project.getPaths()[0]
-    fs.writeFile(dirPath + "/testConversion.fountain", newFileText, (err)  ->
-      if err
-        return console.log(err)
-      console.log("The file was saved!")
-    )
+  setActiveEditorBuffer: (newFileText) =>
+    if editor = atom.workspace.getActiveTextEditor()
+      editor.setText(newFileText)
 
   setOutlineLockIconState: () =>
     if (@outlineLocked)
