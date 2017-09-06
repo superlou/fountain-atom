@@ -3,11 +3,14 @@
 
 module.exports =
 class FountainOutlineView extends ScrollView
-  panel: null
+
   Sortable = require('sortablejs')
   fs = require('fs')
   _ = require('underscore')
-  outlineLocked = true
+
+  panel: null
+  outlineLocked: true
+  eventHandlers: []
 
   initialize: (state) ->
     super
@@ -52,28 +55,26 @@ class FountainOutlineView extends ScrollView
     tempList =  @formatList(scenes)
     @list.append(tempList)
 
-    updateList = @updateList
     el = document.getElementsByClassName('outline-ul')[0];
 
+    oldFileLines = text.split('\n')
     sceneList = _.where(scenes, {type: 'scene'} )
     oldStartLine = null
     oldEndLine = null
     sortable = Sortable.create(el, {
       onChoose: (evt) ->
-        sceneCount = _.where(scenes, {type: 'scene'} ).length
+        sceneCount = sceneList.length
         oldStartLine = parseInt(evt.item.attributes[1].value)
         if evt.oldIndex == sceneCount - 1
-          oldEndLine = text.split('\n').length
+          oldEndLine = oldFileLines.length
         else
           # assuming exclusive
           oldEndLine = parseInt(sceneList[evt.oldIndex+1].line)
 
-      onUpdate: (evt) ->
+      onUpdate: (evt) =>
         oldIndex = evt.oldIndex
         newIndex = evt.newIndex
         if (oldIndex != newIndex)
-
-          oldFileLines = text.split('\n')
 
           if (newIndex > oldIndex)
             newIndex += 1
@@ -85,8 +86,6 @@ class FountainOutlineView extends ScrollView
           newFileText = ''
 
           movingText = oldFileLines.slice(oldStartLine, oldEndLine)
-
-          console.log(movingText)
 
           movingTextLength = oldEndLine - oldStartLine
           textBefore = oldFileLines.slice(0, oldStartLine)
@@ -106,11 +105,13 @@ class FountainOutlineView extends ScrollView
               console.log("The file was saved!")
           )
 
-          updateList()
+          @updateList()
     });
 
+    @clearEventHandlers()
+
     #Add the click event handler
-    $(".outline-item")
+    jumpToHandler = $(".outline-item")
       .on 'click', (e) =>
         line = parseInt($(e.currentTarget).attr('data-line'))
 
@@ -119,22 +120,23 @@ class FountainOutlineView extends ScrollView
         @editor.setCursorBufferPosition(position)
         @editor.moveToFirstCharacterOfLine()
 
-    $("#showScenesCheckbox")
+    showScenesHandler = $("#showScenesCheckbox")
       .on 'click', (e) ->
         if e.currentTarget.checked
           $('li.scene').hide()
         else
           $('li.scene').show()
 
-    sortable.option("disabled", outlineLocked)
-    $(".outline-lock")
-      .on 'click', (e) ->
-        outlineLocked = !outlineLocked
-        if (outlineLocked)
-          $('.outline-lock-overlay-icon').css("visibility", "hidden");
-        else
-          $('.outline-lock-overlay-icon').css("visibility", "visible");
-        sortable.option("disabled", outlineLocked);
+    sortable.option("disabled", @outlineLocked)
+    @setOutlineLockIconState()
+    outlineLockHandler = $(".outline-lock")
+      .on 'click', (e) =>
+        console.log("clicked")
+        @outlineLocked = !@outlineLocked
+        @setOutlineLockIconState()
+        sortable.option("disabled", @outlineLocked);
+
+    @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler)
 
   formatList: (scenes) ->
     formatted = '<li class="outline-li outline-li "><ul class="outline-ul">'
@@ -210,10 +212,19 @@ class FountainOutlineView extends ScrollView
 
   changedPane: (pane) =>
     @editorSubs.dispose()
-
     if pane and (typeof pane.getText == 'function')
       @editor = pane
       @editorSubs.add @editor.onDidStopChanging(@updateList)
       @updateList()
     else
       @clearScenes()
+
+  clearEventHandlers: () ->
+    _.each(@eventHandlers, (handler) -> handler.off())
+    @eventHandlers = []
+
+  setOutlineLockIconState: () =>
+      if (@outlineLocked)
+          $('.outline-lock-overlay-icon').css("visibility", "hidden");
+        else
+          $('.outline-lock-overlay-icon').css("visibility", "visible");
