@@ -59,7 +59,6 @@ module.exports = Fountain =
     @fountainView.destroy()
 
   serialize: ->
-    fountainViewState: @fountainView.serialize()
 
   #toggleSceneList: ->
   #  FountainSceneListView ?= require './fountain-scene-list-view'
