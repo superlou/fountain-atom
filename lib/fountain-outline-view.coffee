@@ -80,12 +80,21 @@ class FountainOutlineView extends ScrollView
     @setOutlineLockIconState()
     outlineLockHandler = $(".outline-lock")
       .on 'click', (e) =>
-        console.log("clicked")
         @outlineLocked = !@outlineLocked
         @setOutlineLockIconState()
         sortable.option("disabled", @outlineLocked);
 
     @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler)
+
+  clearEventHandlers: () ->
+    _.each(@eventHandlers, (handler) -> handler.off())
+    @eventHandlers = []
+
+  setOutlineLockIconState: () =>
+    if (@outlineLocked)
+        $('.outline-lock-overlay-icon').css("visibility", "hidden");
+      else
+        $('.outline-lock-overlay-icon').css("visibility", "visible");
 
   formatList: (scenes) ->
     formatted = '<li class="outline-li outline-li "><ul class="outline-ul">'
@@ -159,10 +168,6 @@ class FountainOutlineView extends ScrollView
   clearScenes: (text) ->
     @list.innerHTML = ""
 
-  clearEventHandlers: () ->
-    _.each(@eventHandlers, (handler) -> handler.off())
-    @eventHandlers = []
-
   changedPane: (pane) =>
     @editorSubs.dispose()
     if pane and (typeof pane.getText == 'function')
@@ -171,6 +176,9 @@ class FountainOutlineView extends ScrollView
       @updateList()
     else
       @clearScenes()
+
+
+  # SORTABLE LIST MANAGEMENT #
 
   createSortableList: (fileText, scenes) =>
 
@@ -183,41 +191,18 @@ class FountainOutlineView extends ScrollView
 
     sortable = Sortable.create(outlineElement, {
 
-      onChoose: (evt) ->
-        # grab details about scene before array mutates
-        sceneCount = sceneList.length
-        oldStartLine = parseInt(evt.item.attributes[1].value)
-        if evt.oldIndex == sceneCount - 1
-          oldEndLine = oldFileLines.length
-        else
-          oldEndLine = parseInt(sceneList[evt.oldIndex+1].line)
+      onChoose: (evt) =>
+        [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
 
       onUpdate: (evt) =>
         # scene moved, so generate new file #
         oldIndex = evt.oldIndex
         newIndex = evt.newIndex
 
-        # account for array index changes
-        if (newIndex > oldIndex)
-          newIndex += 1
-        if (sceneList[newIndex])
-          newStartLine = parseInt(sceneList[newIndex].line)
-        else
-          newStartLine = oldFileLines.length - 1
+        newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
 
-        # isolate relevant chunks
-        newFileText = ''
-        movingText = oldFileLines.slice(oldStartLine, oldEndLine)
-        textBefore = oldFileLines.slice(0, oldStartLine)
-        textAfter = oldFileLines.slice(oldEndLine)
+        newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
 
-        # determine placement of text in preceding or trailing slice
-        if newStartLine < textBefore.length
-          textBefore.splice.apply(textBefore, [newStartLine, 0].concat(movingText))
-        else
-          textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingText.length, 0].concat(movingText))
-
-        newFileText = textBefore.concat(textAfter).join('\n')
         @setActiveEditorBuffer(newFileText)
 
         @updateList()
@@ -225,12 +210,48 @@ class FountainOutlineView extends ScrollView
     })
     sortable
 
+  getOldLineIndexes: (oldFileLines, sceneList, movingElement) =>
+    # grab details about scene before array mutates
+    sceneCount = sceneList.length
+    oldStartLine = parseInt(movingElement.item.attributes[1].value)
+    if movingElement.oldIndex == sceneCount - 1
+      oldEndLine = oldFileLines.length
+    else
+      oldEndLine = parseInt(sceneList[movingElement.oldIndex+1].line)
+    [oldStartLine, oldEndLine]
+
+  getNewStartLineIndex: (oldFileLines, sceneList, oldIndex, newIndex) =>
+    newStartLine = null
+    # account for array index changes
+    if (newIndex > oldIndex)
+      newIndex += 1
+    if (sceneList[newIndex])
+      newStartLine = parseInt(sceneList[newIndex].line)
+    else
+      # they can manage any newline gaps
+      newStartLine = oldFileLines.length - 1
+
+    # yea, this is an intermediate value
+    # because we need slice lengths
+    newStartLine
+
+  getNewFileText: (oldFileLines, oldStartLine, oldEndLine, newStartLine) =>
+
+    # isolate relevant chunks
+    newFileText = ''
+    movingText = oldFileLines.slice(oldStartLine, oldEndLine)
+    textBefore = oldFileLines.slice(0, oldStartLine)
+    textAfter = oldFileLines.slice(oldEndLine)
+
+    # determine placement of text in preceding or trailing slice
+    if newStartLine < textBefore.length
+      textBefore.splice.apply(textBefore, [newStartLine, 0].concat(movingText))
+    else
+      textAfter.splice.apply(textAfter, [newStartLine - textBefore.length - movingText.length, 0].concat(movingText))
+
+    newFileText = textBefore.concat(textAfter).join('\n')
+    newFileText
+
   setActiveEditorBuffer: (newFileText) =>
     if editor = atom.workspace.getActiveTextEditor()
       editor.setText(newFileText)
-
-  setOutlineLockIconState: () =>
-    if (@outlineLocked)
-        $('.outline-lock-overlay-icon').css("visibility", "hidden");
-      else
-        $('.outline-lock-overlay-icon').css("visibility", "visible");
