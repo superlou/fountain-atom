@@ -54,9 +54,7 @@ module.exports = Fountain =
         createFountainPreviewView(filePath: pathname)
 
   deactivate: ->
-    @modalPanel.destroy()
     @subscriptions.dispose()
-    @fountainView.destroy()
 
   serialize: ->
 
