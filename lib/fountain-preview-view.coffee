@@ -2,6 +2,7 @@
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
 _ = require 'underscore-plus'
 fountainParser = require './vendor/fountain-parser'
+PdfConverter = require './fountain-pdf-converter.coffee'
 
 module.exports =
 class FountainPreviewView extends ScrollView
@@ -12,6 +13,7 @@ class FountainPreviewView extends ScrollView
     super
     @emitter = new Emitter
     @disposables = new CompositeDisposable
+    @pdfConverter = new PdfConverter()
     @loaded = false
 
   attached: ->
@@ -115,7 +117,8 @@ class FountainPreviewView extends ScrollView
 
   renderFountainText: (text) ->
     fountainParser.parse text, (output) =>
-      html = "<div class='title-page'>#{output.html.title_page}</div>"
+      html = "<a id='#{ @editorId }' class='pdf-download-button'><span class='icon icon-file-pdf'></span></a>"
+      html += "<div class='title-page'>#{output.html.title_page}</div>"
       html += "<div class='page'>#{output.html.script}</div>"
 
       @loading = false
@@ -123,6 +126,11 @@ class FountainPreviewView extends ScrollView
       @html(html)
       @emitter.emit 'did-change-fountain'
       @originalTrigger('fountain:fountain-changed')
+
+      # ensure only one event listener per preview pane
+      $("\##{ @editorId }.pdf-download-button").on 'click', (event) =>
+        fileName = @editor.getTitle()
+        @pdfConverter.toFile(fileName, text)
 
   getPath: ->
     if @file?
