@@ -30,8 +30,7 @@ class FountainOutlineView extends ScrollView
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'panel-heading', "Fountain Outline", =>
         @span class: 'outline-lock', =>
-          @span id: 'outlineLocked', class: 'icon icon-lock'
-          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
+          @span id: 'outlineLock', class: 'icon icon-lock'
       @div class: 'show-scenes-box', =>
         @label for: 'showScenesCheckbox', "Hide Scenes:"
         @input id: 'showScenesCheckbox', type: 'checkbox'
@@ -95,9 +94,11 @@ class FountainOutlineView extends ScrollView
 
   setOutlineLockIconState: () =>
     if (@outlineLocked)
-        $('.outline-lock-overlay-icon').css("visibility", "hidden");
+        $('#outlineLock').removeClass('icon-key')
+        $('#outlineLock').addClass('icon-lock')
       else
-        $('.outline-lock-overlay-icon').css("visibility", "visible");
+        $('#outlineLock').removeClass('icon-lock')
+        $('#outlineLock').addClass('icon-key')
 
   formatList: (formatted, scenes) ->
     for scene, index in scenes
