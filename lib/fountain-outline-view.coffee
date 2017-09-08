@@ -51,7 +51,10 @@ class FountainOutlineView extends ScrollView
 
     @list.empty()
 
-    tempList =  @formatList(scenes)
+    starter = '<ul class="outline-ul">'
+    tempList =  @formatList(starter, scenes)
+    tempList += '</ul>'
+
     @list.append(tempList)
 
     sortable = @createSortableList(text, scenes)
@@ -96,12 +99,11 @@ class FountainOutlineView extends ScrollView
       else
         $('.outline-lock-overlay-icon').css("visibility", "visible");
 
-  formatList: (scenes) ->
-    formatted = '<li class="outline-li outline-li "><ul class="outline-ul">'
+  formatList: (formatted, scenes) ->
     for scene, index in scenes
       if scene.type == 'synopsis'
         continue
-      formatted += '<li class="outline-item ' + scene.type + '"'
+      formatted += '<li class="outline-item ' + scene.type + ' depth-' + scene.depth + '"'
       formatted += ' data-line="'+ scene.line + '">'
       formatted += '<span class="icon icon-text">' + scene.title + '</span>'
 
@@ -112,9 +114,8 @@ class FountainOutlineView extends ScrollView
             formatted += '</li>'
           else
             formatted += '</li>'
-        formatted += @formatList(scene.children)
+        formatted += @formatList('', scene.children)
       formatted += '</li>'
-    formatted += '</ul></li>'
     formatted
 
   findScenes: (text) ->
@@ -140,6 +141,7 @@ class FountainOutlineView extends ScrollView
             type: "heading" + matched[1].length
             hasNote: false
             children: nestedKids[0]
+            depth: depth
           if nestedKids[1] > 0
             i = nestedKids[1]
           out.push currentScene
@@ -151,6 +153,7 @@ class FountainOutlineView extends ScrollView
           title: arr[i]
           type: "scene"
           hasNote: false
+          depth: depth
         if arr[i].match(/^\s*=\s*/)
           synMatched = arr[i].match(/^\s*=\s*(.+)/)
           currentScene.title = synMatched[1]
@@ -184,7 +187,8 @@ class FountainOutlineView extends ScrollView
 
     outlineElement = document.getElementsByClassName('outline-ul')[0];
     oldFileLines = fileText.split('\n')
-    sceneList = _.where(scenes, {type: 'scene'} )
+    flatSceneList = @flatten(scenes, [])
+    sceneList = _.reject(flatSceneList, _.matches({type: "synopsis"}))
 
     oldStartLine = null
     oldEndLine = null
@@ -209,6 +213,16 @@ class FountainOutlineView extends ScrollView
 
     })
     sortable
+
+  flatten: (structuredScenes, flattenedRep) ->
+    i = 0
+    while i < structuredScenes.length
+      currentScene = structuredScenes[i]
+      flattenedRep.push currentScene
+      if currentScene.hasOwnProperty('children') and currentScene.children.length > 0
+        @flatten(currentScene.children, flattenedRep)
+      i++
+    flattenedRep
 
   getOldLineIndexes: (oldFileLines, sceneList, movingElement) =>
     # grab details about scene before array mutates
