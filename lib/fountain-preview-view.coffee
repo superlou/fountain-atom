@@ -130,7 +130,7 @@ class FountainPreviewView extends ScrollView
       # ensure only one event listener per preview pane
       $("\##{ @editorId }.pdf-download-button").on 'click', (event) =>
         fileName = @editor.getTitle()
-        @pdfConverter.toFile(fileName, text)
+        @pdfConverter.initiateConversion(fileName, text)
 
   getPath: ->
     if @file?
