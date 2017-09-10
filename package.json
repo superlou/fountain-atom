@@ -3,6 +3,9 @@
   "main": "./lib/fountain",
   "version": "0.5.8",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
+  "deserializers": {
+    "FountainPreviewView": "deserializeFountainPreviewView"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/superlou/fountain-atom.git"
