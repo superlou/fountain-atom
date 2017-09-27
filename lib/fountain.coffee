@@ -1,7 +1,6 @@
 {CompositeDisposable} = require 'atom'
 url = require 'url'
 
-#FountainSceneListView = null
 FountainOutlineView = null
 FountainPreviewView = null
 renderer = null
@@ -14,15 +13,7 @@ isFountainPreviewView = (object) ->
   FountainPreviewView ?= require './fountain-preview-view'
   object instanceof FountainPreviewView
 
-atom.deserializers.add
-  name: 'FountainPreviewView'
-  deserialize: (state) ->
-    createFountainPreviewView(state) if state.constructor is Object
-
-
 module.exports = Fountain =
-  fountainView: null
-  modalPanel: null
   subscriptions: null
 
   activate: (state) ->
@@ -34,6 +25,9 @@ module.exports = Fountain =
     @subscriptions.add atom.commands.add 'atom-workspace',
       'fountain:toggleOutlineView': => @toggleOutlineView(),
       'fountain:preview' :=> @preview()
+
+    if state.outlineViewIsVisible
+      @toggleOutlineView()
 
     atom.workspace.addOpener (uri) ->
       try
@@ -54,23 +48,13 @@ module.exports = Fountain =
         createFountainPreviewView(filePath: pathname)
 
   deactivate: ->
-    @modalPanel.destroy()
     @subscriptions.dispose()
-    @fountainView.destroy()
 
   serialize: ->
-    fountainViewState: @fountainView.serialize()
+    outlineViewIsVisible: @outlineView && @outlineView.panel.isVisible()
 
-  #toggleSceneList: ->
-  #  FountainSceneListView ?= require './fountain-scene-list-view'
-  #  @sceneListView ?= new FountainSceneListView({})
-
-  # if @sceneListView.panel.isVisible()
-  #    @sceneListView.panel.hide()
-  #  else
-  #    editor = atom.workspace.getActiveTextEditor()
-  #    @sceneListView.changedPane(editor)
-  #    @sceneListView.panel.show()
+  deserializeFountainPreviewView: (state) ->
+    createFountainPreviewView(state) if state.constructor is Object
 
   toggleOutlineView: ->
     FountainOutlineView ?= require './fountain-outline-view'

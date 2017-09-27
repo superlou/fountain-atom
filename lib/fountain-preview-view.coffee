@@ -31,8 +31,8 @@ class FountainPreviewView extends ScrollView
 
   serialize: ->
     deserializer: 'FountainPreviewView'
-    filePath: @getPath()
     editorId: @editorId
+    filePath: @getPath()
 
   destroy: ->
     @disposables.dispose()
