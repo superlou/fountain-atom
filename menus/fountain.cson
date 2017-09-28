@@ -1,24 +1,20 @@
 # See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
 'context-menu':
   'atom-text-editor': [
-    {
-      'label': 'Toggle fountain'
-      'command': 'fountain:toggle'
-    }
-    {
-      'label': 'Preview Fountain.io script'
-      'command': 'fountain:preview'
-    }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'fountain'
+      'label': 'Fountain'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'fountain:toggle'
+          'label': 'Toggle Outline View'
+          'command': 'fountain:toggleOutlineView'
+        }
+        {
+          'label': 'Show Preview'
+          'command': 'fountain:preview'
         }
       ]
     ]

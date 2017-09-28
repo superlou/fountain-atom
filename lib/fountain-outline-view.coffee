@@ -5,7 +5,7 @@ module.exports =
 class FountainOutlineView extends ScrollView
 
   Sortable = require('sortablejs')
-  _ = require('underscore')
+  _ = require('underscore-plus')
 
   panel: null
   outlineLocked: true

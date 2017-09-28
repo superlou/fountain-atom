@@ -1,6 +1,6 @@
 FountainOutlineView = require '../lib/fountain-outline-view'
 fs = require 'fs'
-_ = require 'underscore'
+_ = require 'underscore-plus'
 
 describe 'Fountain Outline View', ->
   
