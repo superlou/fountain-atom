@@ -11,6 +11,36 @@
   cursor: default;
 }
 
+.fountain-outline-view .panel-heading{
+  position: absolute;
+  height: 40px;
+  width: 100%;
+}
+
+.fountain-outline-view .panel-body{
+  padding-top: 40px;
+}
+
+//.outline-lock > .icon-lock {
+//  color: green
+//}
+//
+//.outline-lock > .icon-key {
+//  color: red
+//}
+
+.pdf-download-button {
+  position: relative;
+  padding-top: 4px;
+  margin-left: 10px;
+  float: right;
+  color: #ed1c24;
+}
+
+.pdf-download-button:hover {
+  color: #f15d63;
+}
+
 .outline-list {
   margin: 0;
   padding: 5px;
@@ -23,8 +53,8 @@
 }
 
 .outline-li {
-    white-space: normal;
-    font-size: 11px;
+  white-space: normal;
+  font-size: 11px;
 }
 
 .heading1 {
@@ -76,8 +106,8 @@
 }
 
 #showScenesCheckbox {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   margin-left: 5px;
   margin-right: 5px;
   vertical-align: text-bottom;
@@ -96,14 +126,6 @@
   height: 100%;
 }
 
-//.outline-lock > .icon-lock {
-//  color: green
-//}
-//
-//.outline-lock > .icon-key {
-//  color: red
-//}
-
 atom-text-editor.editor {
   .syntax--fountain.syntax--scene {
     color: @text-color-info;
@@ -112,18 +134,6 @@ atom-text-editor.editor {
   .syntax--fountain.syntax--character {
     font-weight: bold;
   }
-}
-
-.pdf-download-button {
-  position: absolute;
-  top: 8px;
-  right: 0;
-  z-index: 1000;
-  color: red;
-}
-
-.pdf-download-button:hover {
-  color: black;
 }
 
 .fountain-preview {

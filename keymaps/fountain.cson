@@ -10,3 +10,5 @@
 'atom-text-editor':
   'ctrl-alt-o': 'fountain:toggleOutlineView'
   'ctrl-alt-M': 'fountain:preview'
+  'ctrl-alt-P': 'fountain:pdfPreview'
+  'ctrl-alt-X': 'fountain:pdfExport'

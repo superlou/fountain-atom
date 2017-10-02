@@ -15,12 +15,14 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
+    "atom-package-deps": "^4.6.0",
     "atom-space-pen-views": "^2.0.0",
     "underscore-plus": "^1.0.0",
     "xregexp": "^3.1.1",
     "afterwriting": "^1.7.0",
     "sortablejs": "^1.6.1"
   },
+  "package-deps": ["pdf-view:0.59.0"],
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/superlou/fountain-atom/issues"

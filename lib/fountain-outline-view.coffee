@@ -31,9 +31,11 @@ class FountainOutlineView extends ScrollView
       @div class: 'panel-heading', "Fountain Outline", =>
         @span class: 'outline-lock', =>
           @span id: 'outlineLock', class: 'icon icon-lock'
-      @div class: 'show-scenes-box', =>
-        @label for: 'showScenesCheckbox', "Hide Scenes:"
-        @input id: 'showScenesCheckbox', type: 'checkbox'
+        @a class: 'pdf-download-button', =>
+          @span id: 'pdfDownload', class: 'icon icon-file-pdf'
+        @div class: 'show-scenes-box', =>
+          @label for: 'showScenesCheckbox', "Hide Scenes:"
+          @input id: 'showScenesCheckbox', type: 'checkbox'
       @div class: 'panel-body', =>
         @ul class: 'outline-list', outlet: "list"
 
@@ -86,7 +88,11 @@ class FountainOutlineView extends ScrollView
         @setOutlineLockIconState()
         sortable.option("disabled", @outlineLocked);
 
-    @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler)
+    downloadHandler = $(".pdf-download-button")
+      .on 'click', (e) =>
+        atom.packages.getActivePackage('fountain').mainModule.pdfExport();
+
+    @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
 
   clearEventHandlers: () ->
     _.each(@eventHandlers, (handler) -> handler.off())
