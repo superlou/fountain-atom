@@ -23,7 +23,7 @@ describe 'Fountain PDF Converter', ->
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
       fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
-      @pdfConverter.toFile('grammar-tests.fountain', fileContent)
+      @pdfConverter.toFile("./", 'grammar-tests.fountain', fileContent)
       fileBuffer = fs.readFileSync(pdfName)
       expect(fileBuffer).toBeTruthy()
       expect(atom.notifications.addError).not.toHaveBeenCalled()
@@ -37,7 +37,7 @@ describe 'Fountain PDF Converter', ->
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
       fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
-      @pdfConverter.initiateConversion('grammar-tests.fountain', fileContent)
+      @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent)
       fileBuffer = fs.readFileSync(pdfName)
       expect(fileBuffer).toBeTruthy()
       expect(atom.confirm).not.toHaveBeenCalled()
@@ -51,7 +51,7 @@ describe 'Fountain PDF Converter', ->
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
       fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
-      @pdfConverter.initiateConversion('grammar-tests.fountain', fileContent)
+      @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent)
       fileBuffer = fs.readFileSync(pdfName)
       expect(fileBuffer).toBeTruthy()
       expect(atom.confirm).toHaveBeenCalled()
@@ -65,7 +65,7 @@ describe 'Fountain PDF Converter', ->
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
       fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
-      @pdfConverter.initiateConversion('grammar-tests.fountain', fileContent)
+      @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent)
       fileBuffer = fs.readFileSync(pdfName)
       expect(fileBuffer).toBeTruthy()
       expect(atom.confirm).toHaveBeenCalled()

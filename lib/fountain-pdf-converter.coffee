@@ -1,5 +1,6 @@
 child_process = require 'child_process'
 fs = require 'fs'
+path = require 'path'
 
 class PdfConverter
 
@@ -9,13 +10,13 @@ class PdfConverter
   createPdf: (projectPath, fileName, fileText) ->
     initiateConversion(projectPath, fileName, fileText)
 
-  initiateConversion = (projectPath, fileName, fileText, isPreview=false) ->
+  initiateConversion: (projectPath, fileName, fileText, isPreview=false) ->
 
     [fileCommonName, fileExtension] = fileName.split('.')
 
     #only prompt for save if not temp && overwriting
     if isPreview
-      toFile(projectPath, fileName, fileText, isPreview)
+      @toFile(projectPath, fileName, fileText, isPreview)
     else
       try
         # make cross-platform for the overwrite check
@@ -25,11 +26,11 @@ class PdfConverter
           detailedMessage: "File #{fileCommonName}.pdf already exists.  Would you like to overwrite?"
           buttons: ["Yes", "No"]
         if choice == 0
-          toFile(projectPath, fileName, fileText, isPreview)
+          @toFile(projectPath, fileName, fileText, isPreview)
       catch err
-        toFile(projectPath, fileName, fileText, isPreview)
+        @toFile(projectPath, fileName, fileText, isPreview)
 
-  toFile = (projectPath, fileName, fileText, isPreview=false) ->
+  toFile: (projectPath, fileName, fileText, isPreview=false) ->
 
     [fileCommonName, fileExtension] = fileName.split('.')
     timeStamp = new Date().getTime()
@@ -45,18 +46,17 @@ class PdfConverter
     outputFullPath = "#{if isPreview then packageTempPath else projectPath}/#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf"
     configPath = "#{packagePath}/configs/afterwritingConfig.json"
 
-    # hopefully account for OS differences
-    # TODO: FIX THIS UP... and maybe use node path module above
-    linuxCommand = "node #{afterwritingPath} --source #{tempFileName} --pdf \"#{outputFullPath}\" --config #{configPath} --overwrite"
-    windowsCommand = "node #{packagePath}\\node_modules\\afterwriting\\awc.js --source #{tempFileName} --pdf #{fileCommonName}.pdf --config #{packagePath}\\configs\\afterwritingConfig.json --overwrite"
-    systemSpecificCommand
-    if (process.platform == 'win32')
-      systemSpecificCommand = windowsCommand
-    else
-      systemSpecificCommand = linuxCommand
+    packagePath = path.normalize(packagePath)
+    afterwritingPath = path.normalize(afterwritingPath)
+    packageTempPath = path.normalize(packageTempPath)
+    outputFullPath = path.normalize(outputFullPath)
+    configPath = path.normalize(configPath)
+
+    conversionCommand = "node #{afterwritingPath} --source #{tempFileName} --pdf \"#{outputFullPath}\" --config #{configPath} --overwrite"
 
     # execute command to generate pdf
-    child_process.execSync systemSpecificCommand
+    child_process.execSync conversionCommand
+
     if !isPreview
       atom.notifications.addSuccess("New file #{fileCommonName}.pdf has been saved")
 
