@@ -96,7 +96,7 @@ module.exports = Fountain =
     text = activeEditor.getSelectedText() || activeEditor.getText()
     pdfConverter = new PdfConverter()
     uri = pdfConverter.createPdf(projectPath.join('/'), fileName, text)
-    atom.workspace.open(uri, {"searchAllPanes":true})
+    if uri then atom.workspace.open(uri, {"searchAllPanes":true})
 
   uriForEditor: (editor) ->
     "fountain-preview://editor/#{editor.id}"

@@ -42,7 +42,7 @@ class PdfConverter
     packagePath = atom.packages.resolvePackagePath('fountain')
     afterwritingPath = "#{packagePath}/node_modules/afterwriting/awc.js"
     packageTempPath = packagePath + "/temp"
-    outputFullPath = "#{if isPreview then packageTempPath else projectPath}/#{fileCommonName}.pdf"
+    outputFullPath = "#{if isPreview then packageTempPath else projectPath}/#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf"
     configPath = "#{packagePath}/configs/afterwritingConfig.json"
 
     # hopefully account for OS differences

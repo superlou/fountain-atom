@@ -28,9 +28,11 @@ class FountainOutlineView extends ScrollView
 
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
-      @div class: 'panel-heading', "Fountain Outline", =>
-        @span class: 'outline-lock', =>
+      @div class: 'panel-heading', =>
+        @a class: 'outline-lock', =>
           @span id: 'outlineLock', class: 'icon icon-lock'
+          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
+        @div class: 'panel-heading-text', "Fountain Outline"
         @a class: 'pdf-download-button', =>
           @span id: 'pdfDownload', class: 'icon icon-file-pdf'
         @div class: 'show-scenes-box', =>
@@ -100,11 +102,9 @@ class FountainOutlineView extends ScrollView
 
   setOutlineLockIconState: () =>
     if (@outlineLocked)
-        $('#outlineLock').removeClass('icon-key')
-        $('#outlineLock').addClass('icon-lock')
-      else
-        $('#outlineLock').removeClass('icon-lock')
-        $('#outlineLock').addClass('icon-key')
+      $('.outline-lock-overlay-icon').css("visibility", "hidden");
+    else
+      $('.outline-lock-overlay-icon').css("visibility", "visible");
 
   formatList: (formatted, scenes) ->
     for scene, index in scenes
