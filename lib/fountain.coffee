@@ -28,7 +28,7 @@ module.exports = Fountain =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
       'fountain:toggleOutlineView': => @toggleOutlineView(),
-      'fountain:preview' :=> @preview(),
+      'fountain:preview_legacy' :=> @preview(),  # deprecated TODO: remove in a later release
       'fountain:pdfPreview' :=> @pdfPreview(),
       'fountain:pdfExport' :=> @pdfExport()
 
@@ -81,22 +81,28 @@ module.exports = Fountain =
 
   pdfPreview: (event) ->
     activeEditor = atom.workspace.getActiveTextEditor()
-    projectPath = if event then event.path.split('/') else activeEditor.getPath().split('/')
-    fileName = projectPath.pop()
-    text = activeEditor.getSelectedText() || activeEditor.getText()
-    pdfConverter = new PdfConverter()
-    uri = pdfConverter.createPreview(projectPath.join('/'), fileName, text)
-    atom.workspace.open(uri, {"searchAllPanes":true})
-    if !event then activeEditor.onDidSave(this.pdfPreview)
+    if event || activeEditor
+      projectPath = if event then event.path.split('/') else activeEditor.getPath().split('/')
+      fileName = projectPath.pop()
+      text = activeEditor.getSelectedText() || activeEditor.getText()
+      pdfConverter = new PdfConverter()
+      pdfConverter.createPreview(projectPath.join('/'), fileName, text).then (uri) =>
+        atom.workspace.open(uri, {"searchAllPanes":true})
+        if !event then activeEditor.onDidSave(this.pdfPreview)
+    else
+      atom.notifications.addInfo("No fountain file is currently targeted")
 
   pdfExport: ->
     activeEditor = atom.workspace.getActiveTextEditor()
-    projectPath = activeEditor.getPath().split('/')
-    fileName = projectPath.pop()
-    text = activeEditor.getSelectedText() || activeEditor.getText()
-    pdfConverter = new PdfConverter()
-    uri = pdfConverter.createPdf(projectPath.join('/'), fileName, text)
-    if uri then atom.workspace.open(uri, {"searchAllPanes":true})
+    if (activeEditor)
+      projectPath = activeEditor.getPath().split('/')
+      fileName = projectPath.pop()
+      text = activeEditor.getSelectedText() || activeEditor.getText()
+      pdfConverter = new PdfConverter()
+      pdfConverter.createPdf(projectPath.join('/'), fileName, text).then (uri) ->
+        if uri then atom.workspace.open(uri, {"searchAllPanes":true})
+    else
+      atom.notifications.addInfo("No fountain file is currently targeted")
 
   uriForEditor: (editor) ->
     "fountain-preview://editor/#{editor.id}"
