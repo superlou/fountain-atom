@@ -11,6 +11,49 @@
   cursor: default;
 }
 
+.fountain-outline-view .panel-heading{
+  position: absolute;
+  height: 40px;
+  width: 100%;
+}
+
+.fountain-outline-view .panel-body{
+  padding-top: 40px;
+}
+
+.fountain-outline-view .panel-heading-text {
+  position: absolute;
+  margin-top: 6px;
+  margin-left: 20px;
+}
+
+.outline-lock {
+  position: absolute;
+  margin-top: 4px;
+}
+
+.outline-lock-overlay-icon {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  color: #ed1c24;
+  visibility: hidden;
+  text-shadow: -1px 0 pink, 0 1px pink, 1px 0 pink, 0 -1px pink;
+}
+
+
+.pdf-download-button {
+  position: relative;
+  padding-top: 4px;
+  margin-left: 10px;
+  float: right;
+  color: #ed1c24;
+}
+
+.pdf-download-button:hover {
+  color: #f15d63;
+}
+
 .outline-list {
   margin: 0;
   padding: 5px;
@@ -23,8 +66,8 @@
 }
 
 .outline-li {
-    white-space: normal;
-    font-size: 11px;
+  white-space: normal;
+  font-size: 11px;
 }
 
 .heading1 {
@@ -76,8 +119,8 @@
 }
 
 #showScenesCheckbox {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   margin-left: 5px;
   margin-right: 5px;
   vertical-align: text-bottom;
@@ -95,14 +138,6 @@
   overflow: auto;
   height: 100%;
 }
-
-//.outline-lock > .icon-lock {
-//  color: green
-//}
-//
-//.outline-lock > .icon-key {
-//  color: red
-//}
 
 atom-text-editor.editor {
   .syntax--fountain.syntax--scene {
