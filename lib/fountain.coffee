@@ -27,10 +27,10 @@ module.exports = Fountain =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'fountain:toggleOutlineView': => @toggleOutlineView(),
-      'fountain:preview_legacy' :=> @preview(),  # deprecated TODO: remove in a later release
-      'fountain:pdfPreview' :=> @pdfPreview(),
-      'fountain:pdfExport' :=> @pdfExport()
+      'fountain:toggle-outline-view': => @toggleOutlineView(),
+      'fountain:preview-legacy' :=> @preview(),  # deprecated TODO: remove in a later release
+      'fountain:preview' :=> @pdfPreview(),
+      'fountain:export-PDF' :=> @pdfExport()
 
     if state.outlineViewIsVisible
       @toggleOutlineView()
