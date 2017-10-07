@@ -25,7 +25,7 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/outline-view-tests.fountain'
+      fileToRead = 'spec/test_files/outline-view-tests.fountain'
       @fileText = fs.readFileSync(fileToRead, 'utf8')
 
     it 'should have text', ->
@@ -49,7 +49,7 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/outline-view-tests.fountain'
+      fileToRead = 'spec/test_files/outline-view-tests.fountain'
       @fileText = fs.readFileSync(fileToRead, 'utf8')
       @fileLines = @fileText.split('\n')
 
@@ -144,7 +144,7 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/outline-view-tests.fountain'
+      fileToRead = 'spec/test_files/outline-view-tests.fountain'
       @fileText = fs.readFileSync(fileToRead, 'utf8')
       @fileLines = @fileText.split('\n')
 

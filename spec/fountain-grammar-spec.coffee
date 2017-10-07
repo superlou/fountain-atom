@@ -6,4 +6,4 @@ describe 'Fountain Grammar', ->
     waitsForPromise ->
       atom.packages.activatePackage 'fountain',
 
-  grammarTest('spec/grammar-tests.fountain')
+  grammarTest('spec/test_files/grammar-tests.fountain')

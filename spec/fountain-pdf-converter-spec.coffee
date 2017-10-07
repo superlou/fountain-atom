@@ -25,7 +25,7 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom.notifications, 'addSuccess')
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
+      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
 
       runs () ->
         @pdfConverter.toFile("./", 'grammar-tests.fountain', fileContent).then () ->
@@ -34,7 +34,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -47,7 +47,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()
@@ -58,7 +58,7 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom, "confirm")
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
+      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
 
       runs () ->
         @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
@@ -67,7 +67,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -82,7 +82,7 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom, "confirm").andReturn(1)
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
+      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
 
       runs () ->
         @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
@@ -91,7 +91,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -106,7 +106,7 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom, "confirm").andReturn(0)
       fileName = 'grammar-tests.fountain'
       pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/' + fileName, "utf8")
+      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
       runs () ->
         @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
           flag = true
@@ -114,7 +114,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -127,7 +127,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()
