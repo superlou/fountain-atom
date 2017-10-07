@@ -8,6 +8,6 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-text-editor':
-  'ctrl-alt-o': 'fountain:toggleOutlineView'
-  'ctrl-alt-M': 'fountain:pdfPreview'
-  'ctrl-alt-X': 'fountain:pdfExport'
+  'ctrl-alt-o': 'fountain:toggle-outline-view'
+  'ctrl-alt-M': 'fountain:preview'
+  'ctrl-alt-X': 'fountain:export-PDF'
