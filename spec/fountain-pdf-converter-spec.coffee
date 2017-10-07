@@ -34,7 +34,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -47,7 +47,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()
@@ -67,7 +67,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -91,7 +91,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -114,7 +114,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -127,7 +127,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 750
+      , "flag set", 3000
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()
