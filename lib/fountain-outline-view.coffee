@@ -65,6 +65,8 @@ class FountainOutlineView extends ScrollView
     # EVENT HANDLER MANAGEMENT #
 
     @clearEventHandlers()
+    sortable.option("disabled", @outlineLocked)
+    @setOutlineLockIconState()
 
     jumpToHandler = $(".outline-item")
       .on 'click', (e) =>
@@ -76,23 +78,34 @@ class FountainOutlineView extends ScrollView
         @editor.moveToFirstCharacterOfLine()
 
     showScenesHandler = $("#showScenesCheckbox")
-      .on 'click', (e) ->
+      .on 'click', (e) =>
         if e.currentTarget.checked
           $('li.scene').hide()
+
+          # TODO: remove when parent dragging/dropping implemented
+          # disables outline lock when hiding scenes
+          $('a.outline-lock').css('pointer-events', 'none')
+          $('#outlineLock').css('color', 'grey')
+          @outlineLocked = true
+          @setOutlineLockIconState()
+          sortable.option("disabled", @outlineLocked)
+
         else
           $('li.scene').show()
 
-    sortable.option("disabled", @outlineLocked)
-    @setOutlineLockIconState()
+          # TODO: remove when parent dragging/dropping implemented
+          $('a.outline-lock').css('pointer-events', 'auto')
+          $('#outlineLock').css('color', 'white')
+
     outlineLockHandler = $(".outline-lock")
       .on 'click', (e) =>
         @outlineLocked = !@outlineLocked
         @setOutlineLockIconState()
-        sortable.option("disabled", @outlineLocked);
+        sortable.option("disabled", @outlineLocked)
 
     downloadHandler = $(".pdf-download-button")
       .on 'click', (e) =>
-        atom.packages.getActivePackage('fountain').mainModule.pdfExport();
+        atom.packages.getActivePackage('fountain').mainModule.pdfExport()
 
     @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
 
