@@ -29,9 +29,10 @@ class FountainOutlineView extends ScrollView
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'panel-heading', =>
-        @a class: 'outline-lock', =>
-          @span id: 'outlineLock', class: 'icon icon-lock'
-          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
+#        TODO: ADD BACK WHEN PARENT REORDERING COMPLETED
+#        @a class: 'outline-lock', =>
+#          @span id: 'outlineLock', class: 'icon icon-lock'
+#          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
         @div class: 'panel-heading-text', "Fountain Outline"
         @a class: 'pdf-download-button', =>
           @span id: 'pdfDownload', class: 'icon icon-file-pdf'
