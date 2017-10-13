@@ -1,7 +1,7 @@
 {
   "name": "fountain",
   "main": "./lib/fountain",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
   "deserializers": {
     "FountainPreviewView": "deserializeFountainPreviewView"
@@ -22,7 +22,9 @@
     "afterwriting": "^1.7.0",
     "sortablejs": "^1.6.1"
   },
-  "package-deps": ["pdf-view:0.59.0"],
+  "package-deps": [
+    "pdf-view:0.59.0"
+  ],
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/superlou/fountain-atom/issues"
