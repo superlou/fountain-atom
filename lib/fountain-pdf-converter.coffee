@@ -1,4 +1,4 @@
-child_process = require 'child_process'
+{BufferedNodeProcess} = require 'atom'
 fs = require 'fs'
 path = require 'path'
 
@@ -64,9 +64,12 @@ class PdfConverter
         fs.writeFile(tempFilePath, fileText, resolve)
 
     generatePdf = () =>
-      conversionCommand = "node #{afterwritingPath} --source #{tempFilePath} --pdf \"#{outputFullPath}\" --config #{configPath} --overwrite"
+      command = afterwritingPath
+      args = ['--source', tempFilePath, '--pdf', outputFullPath, '--config', configPath, '--overwrite']
+      stdout = (output) -> console.log(output)
+      stderr = (output) -> console.error(output)
       return new Promise (resolve, reject) =>
-        child_process.exec(conversionCommand, resolve)
+         new BufferedNodeProcess({command: command, args: args, stdout: stdout, stderr: stderr, exit: resolve})
 
     notifySuccess = () =>
       if !isPreview
