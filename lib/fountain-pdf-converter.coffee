@@ -39,18 +39,11 @@ class PdfConverter
 
     # construct paths
     packagePath = atom.packages.resolvePackagePath('fountain')
-    packageTempPath = packagePath + "/temp"
-    tempFilePath = "#{packageTempPath}/tmp#{timeStamp}.fountain"
-    afterwritingPath = "#{packagePath}/node_modules/afterwriting/awc.js"
-    outputFullPath = "#{if isPreview then packageTempPath else projectPath}/#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf"
-    configPath = "#{packagePath}/configs/afterwritingConfig.json"
-
-    # normalize paths (hoping, but not sure this will work)
-    packagePath = path.normalize(packagePath)
-    afterwritingPath = path.normalize(afterwritingPath)
-    packageTempPath = path.normalize(packageTempPath)
-    outputFullPath = path.normalize(outputFullPath)
-    configPath = path.normalize(configPath)
+    packageTempPath = path.join(packagePath, "temp")
+    tempFilePath = path.join(packageTempPath, "tmp#{timeStamp}.fountain")
+    afterwritingPath = path.join(packagePath, "node_modules", "afterwriting", "awc.js")
+    outputFullPath = path.join("#{if isPreview then packageTempPath else projectPath}", "#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf")
+    configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
 
     notifyBegin = () =>
       if isPreview
