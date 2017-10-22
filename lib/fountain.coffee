@@ -82,7 +82,10 @@ module.exports = Fountain =
   pdfPreview: (event) ->
     activeEditor = atom.workspace.getActiveTextEditor()
     if event || activeEditor
-      projectPath = if event then event.path.split('/') else activeEditor.getPath().split('/')
+      activeEditorPath = activeEditor.getPath()
+      if !activeEditorPath
+        return atom.notifications.addInfo("File must be saved to render PDF preview")
+      projectPath = if event then event.path.split('/') else activeEditorPath.split('/')
       fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
@@ -95,7 +98,10 @@ module.exports = Fountain =
   pdfExport: ->
     activeEditor = atom.workspace.getActiveTextEditor()
     if (activeEditor)
-      projectPath = activeEditor.getPath().split('/')
+      activeEditorPath = activeEditor.getPath()
+      if !activeEditorPath
+        return atom.notifications.addInfo("File must be saved to export PDF")
+      projectPath = activeEditorPath.split('/')
       fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()

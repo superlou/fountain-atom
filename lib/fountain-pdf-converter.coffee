@@ -1,4 +1,4 @@
-child_process = require 'child_process'
+{BufferedNodeProcess} = require 'atom'
 fs = require 'fs'
 path = require 'path'
 
@@ -39,18 +39,11 @@ class PdfConverter
 
     # construct paths
     packagePath = atom.packages.resolvePackagePath('fountain')
-    packageTempPath = packagePath + "/temp"
-    tempFilePath = "#{packageTempPath}/tmp#{timeStamp}.fountain"
-    afterwritingPath = "#{packagePath}/node_modules/afterwriting/awc.js"
-    outputFullPath = "#{if isPreview then packageTempPath else projectPath}/#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf"
-    configPath = "#{packagePath}/configs/afterwritingConfig.json"
-
-    # normalize paths (hoping, but not sure this will work)
-    packagePath = path.normalize(packagePath)
-    afterwritingPath = path.normalize(afterwritingPath)
-    packageTempPath = path.normalize(packageTempPath)
-    outputFullPath = path.normalize(outputFullPath)
-    configPath = path.normalize(configPath)
+    packageTempPath = path.join(packagePath, "temp")
+    tempFilePath = path.join(packageTempPath, "tmp#{timeStamp}.fountain")
+    afterwritingPath = path.join(packagePath, "node_modules", "afterwriting", "awc.js")
+    outputFullPath = path.join("#{if isPreview then packageTempPath else projectPath}", "#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf")
+    configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
 
     notifyBegin = () =>
       if isPreview
@@ -64,9 +57,12 @@ class PdfConverter
         fs.writeFile(tempFilePath, fileText, resolve)
 
     generatePdf = () =>
-      conversionCommand = "node #{afterwritingPath} --source #{tempFilePath} --pdf \"#{outputFullPath}\" --config #{configPath} --overwrite"
+      command = afterwritingPath
+      args = ['--source', tempFilePath, '--pdf', outputFullPath, '--config', configPath, '--overwrite']
+      stdout = (output) -> console.log(output)
+      stderr = (output) -> console.error(output)
       return new Promise (resolve, reject) =>
-        child_process.exec(conversionCommand, resolve)
+         new BufferedNodeProcess({command: command, args: args, stdout: stdout, stderr: stderr, exit: resolve})
 
     notifySuccess = () =>
       if !isPreview
