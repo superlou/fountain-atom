@@ -65,7 +65,7 @@ class PdfConverter
 
     notifySuccess = () =>
       if !isPreview
-          atom.notifications.addSuccess("New file \"#{fileCommonName}.pdf\" has been created")
+          atom.notifications.addSuccess("New file \"#{parsedPath.name}.pdf\" has been created")
       return Promise.resolve()
 
     deleteTempFile = () =>
