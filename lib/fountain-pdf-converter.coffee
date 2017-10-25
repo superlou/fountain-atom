@@ -4,37 +4,36 @@ path = require 'path'
 
 class PdfConverter
 
-  createPreview: (projectPath, fileName, fileText) ->
-    @initiateConversion(projectPath, fileName, fileText, true)
+  createPreview: (projectPath, fileText) ->
+    @initiateConversion(projectPath, fileText, true)
 
-  createPdf: (projectPath, fileName, fileText) ->
-    @initiateConversion(projectPath, fileName, fileText)
+  createPdf: (projectPath, fileText) ->
+    @initiateConversion(projectPath, fileText)
 
-  initiateConversion: (projectPath, fileName, fileText, isPreview=false) ->
+  initiateConversion: (projectPath, fileText, isPreview=false) ->
 
-    [fileCommonName, fileExtension] = fileName.split('.')
+    parsedPath = path.parse(projectPath)
 
     #only prompt for save if not temp && overwriting
     if isPreview
-      @toFile(projectPath, fileName, fileText, isPreview)
+      @toFile(parsedPath, fileText, isPreview)
     else
       try
         # make cross-platform for the overwrite check
-        fs.readFileSync("#{projectPath + '/' + fileCommonName}.pdf")
+        fs.readFileSync(path.join(parsedPath.dir, "#{parsedPath.name}.pdf"))
         choice = atom.confirm
           message: "File exists..."
-          detailedMessage: "File #{fileCommonName}.pdf already exists.  Would you like to overwrite?"
+          detailedMessage: "File #{parsedPath.name}.pdf already exists.  Would you like to overwrite?"
           buttons: ["Yes", "No"]
         if choice == 0
-          @toFile(projectPath, fileName, fileText, isPreview)
+          @toFile(parsedPath, fileText, isPreview)
         else
           Promise.resolve()
       catch err
-        @toFile(projectPath, fileName, fileText, isPreview)
+        @toFile(parsedPath, fileText, isPreview)
 
-  toFile: (projectPath, fileName, fileText, isPreview=false) ->
+  toFile: (parsedPath, fileText, isPreview=false) ->
 
-    [fileCommonName, fileExtension] = fileName.split('.')
     timeStamp = new Date().getTime()
 
     # construct paths
@@ -42,14 +41,14 @@ class PdfConverter
     packageTempPath = path.join(packagePath, "temp")
     tempFilePath = path.join(packageTempPath, "tmp#{timeStamp}.fountain")
     afterwritingPath = path.join(packagePath, "node_modules", "afterwriting", "awc.js")
-    outputFullPath = path.join("#{if isPreview then packageTempPath else projectPath}", "#{if isPreview then '(preview) ' else ''}#{fileCommonName}.pdf")
+    outputFullPath = path.join("#{if isPreview then packageTempPath else parsedPath.dir}", "#{if isPreview then '(preview) ' else ''}#{parsedPath.name}.pdf")
     configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
 
     notifyBegin = () =>
       if isPreview
-        atom.notifications.addSuccess("Generating preview for \"#{fileCommonName}.fountain\"")
+        atom.notifications.addSuccess("Generating preview for \"#{parsedPath.name}.fountain\"")
       else
-        atom.notifications.addSuccess("Generating file \"#{fileCommonName}.pdf\"")
+        atom.notifications.addSuccess("Generating file \"#{parsedPath.name}.pdf\"")
       return Promise.resolve()
 
     writeTempFile = () =>
@@ -66,7 +65,7 @@ class PdfConverter
 
     notifySuccess = () =>
       if !isPreview
-          atom.notifications.addSuccess("New file \"#{fileCommonName}.pdf\" has been created")
+          atom.notifications.addSuccess("New file \"#{parsedPath.name}.pdf\" has been created")
       return Promise.resolve()
 
     deleteTempFile = () =>
