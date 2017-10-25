@@ -85,11 +85,9 @@ module.exports = Fountain =
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
         return atom.notifications.addInfo("File must be saved to render PDF preview")
-      projectPath = if event then event.path.replace(/\\/g,'/').split('/') else activeEditorPath.replace(/\\/g,'/').split('/')
-      fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
-      pdfConverter.createPreview(projectPath.join('/'), fileName, text).then (uri) =>
+      pdfConverter.createPreview((if event then event.path else activeEditorPath), text).then (uri) =>
         atom.workspace.open(uri, {"searchAllPanes":true})
         if !event then activeEditor.onDidSave(this.pdfPreview)
     else
@@ -101,11 +99,9 @@ module.exports = Fountain =
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
         return atom.notifications.addInfo("File must be saved to export PDF")
-      projectPath = activeEditorPath.replace(/\\/g,'/').split('/')
-      fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
-      pdfConverter.createPdf(projectPath.join('/'), fileName, text).then (uri) ->
+      pdfConverter.createPdf(activeEditorPath, text).then (uri) ->
         if uri then atom.workspace.open(uri, {"searchAllPanes":true})
     else
       atom.notifications.addInfo("No fountain file is currently targeted")
