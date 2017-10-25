@@ -1,5 +1,6 @@
 PdfConverter = require '../lib/fountain-pdf-converter'
 fs = require 'fs'
+path = require 'path'
 
 describe 'Fountain PDF Converter', ->
 
@@ -23,12 +24,13 @@ describe 'Fountain PDF Converter', ->
     it 'should be able to save new pdf', ->
       spyOn(atom.notifications, 'addError')
       spyOn(atom.notifications, 'addSuccess')
-      fileName = 'grammar-tests.fountain'
-      pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileName = path.join(packagePath, 'spec/test_files/grammar-tests.fountain')
+      pdfName = path.join(packagePath, 'spec/test_files/grammar-tests.pdf')
+      fileContent = fs.readFileSync(fileName, "utf8")
 
       runs () ->
-        @pdfConverter.toFile("./", 'grammar-tests.fountain', fileContent).then () ->
+        @pdfConverter.toFile(path.parse(fileName), fileContent).then () ->
           flag = true
       , 5000
 
@@ -56,12 +58,13 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom.notifications, 'addError')
       spyOn(atom.notifications, 'addSuccess')
       spyOn(atom, "confirm")
-      fileName = 'grammar-tests.fountain'
-      pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileName = path.join(packagePath, 'spec/test_files/grammar-tests.fountain')
+      pdfName = path.join(packagePath, 'spec/test_files/grammar-tests.pdf')
+      fileContent = fs.readFileSync(fileName, "utf8")
 
       runs () ->
-        @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
+        @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
       , 5000
 
@@ -80,12 +83,13 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom.notifications, 'addError')
       spyOn(atom.notifications, 'addSuccess')
       spyOn(atom, "confirm").andReturn(1)
-      fileName = 'grammar-tests.fountain'
-      pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileName = path.join(packagePath, 'spec/test_files/grammar-tests.fountain')
+      pdfName = path.join(packagePath, 'spec/test_files/grammar-tests.pdf')
+      fileContent = fs.readFileSync(fileName, "utf8")
 
       runs () ->
-        @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
+        @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
       , 5000
 
@@ -104,11 +108,12 @@ describe 'Fountain PDF Converter', ->
       spyOn(atom.notifications, 'addError')
       spyOn(atom.notifications, 'addSuccess')
       spyOn(atom, "confirm").andReturn(0)
-      fileName = 'grammar-tests.fountain'
-      pdfName = 'grammar-tests.pdf'
-      fileContent = fs.readFileSync('./spec/test_files/' + fileName, "utf8")
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileName = path.join(packagePath, 'spec/test_files/grammar-tests.fountain')
+      pdfName = path.join(packagePath, 'spec/test_files/grammar-tests.pdf')
+      fileContent = fs.readFileSync(fileName, "utf8")
       runs () ->
-        @pdfConverter.initiateConversion("./", 'grammar-tests.fountain', fileContent).then () ->
+        @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
       , 5000
 

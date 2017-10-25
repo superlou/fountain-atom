@@ -1,9 +1,10 @@
 FountainOutlineView = require '../lib/fountain-outline-view'
 fs = require 'fs'
 _ = require 'underscore-plus'
+path = require 'path'
 
 describe 'Fountain Outline View', ->
-  
+
   SCENE_LIST = [ { line : 12, title : "EXT. BRICK'S PATIO - DAY", type : "scene", hasNote : false, depth : 0 }, { line : 52, title : "INT. TRAILER HOME - DAY", type : "scene", hasNote : false, depth : 0 }, { line : 69, title : "EXT. BRICK'S POOL - DAY", type : "scene", hasNote : false, depth : 0 }, { line : 80, title : ".SNIPER SCOPE POV", type : "scene", hasNote : false, depth : 0 }, { line : 95, title : ".OPENING TITLES", type : "scene", hasNote : false, depth : 0 }, { line : 105, title : "EXT. WOODEN SHACK - DAY", type : "scene", hasNote : false, depth : 0 }, { line : 129, title : "INT. GARAGE - DAY", type : "scene", hasNote : false, depth : 0 }, { line : 144, title : "EXT. PALATIAL MANSION - DAY", type : "scene", hasNote : false, depth : 0 } ]
   FORMATTED_SCENE_LIST = '<li class="outline-item scene depth-0" data-line="12"><span class="icon icon-text">EXT. BRICK\'S PATIO - DAY</span></li><li class="outline-item scene depth-0" data-line="52"><span class="icon icon-text">INT. TRAILER HOME - DAY</span></li><li class="outline-item scene depth-0" data-line="69"><span class="icon icon-text">EXT. BRICK\'S POOL - DAY</span></li><li class="outline-item scene depth-0" data-line="80"><span class="icon icon-text">.SNIPER SCOPE POV</span></li><li class="outline-item scene depth-0" data-line="95"><span class="icon icon-text">.OPENING TITLES</span></li><li class="outline-item scene depth-0" data-line="105"><span class="icon icon-text">EXT. WOODEN SHACK - DAY</span></li><li class="outline-item scene depth-0" data-line="129"><span class="icon icon-text">INT. GARAGE - DAY</span></li><li class="outline-item scene depth-0" data-line="144"><span class="icon icon-text">EXT. PALATIAL MANSION - DAY</span></li>'
   SCENE_TYPE_LIST = _.where(SCENE_LIST, {type: 'scene'} )
@@ -25,7 +26,8 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/test_files/outline-view-tests.fountain'
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileToRead = path.join(packagePath, 'spec/test_files/outline-view-tests.fountain')
       @fileText = fs.readFileSync(fileToRead, 'utf8')
 
     it 'should have text', ->
@@ -49,7 +51,8 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/test_files/outline-view-tests.fountain'
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileToRead = path.join(packagePath, 'spec/test_files/outline-view-tests.fountain')
       @fileText = fs.readFileSync(fileToRead, 'utf8')
       @fileLines = @fileText.split('\n')
 
@@ -144,7 +147,8 @@ describe 'Fountain Outline View', ->
 
     beforeEach ->
       @fov = new FountainOutlineView()
-      fileToRead = 'spec/test_files/outline-view-tests.fountain'
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileToRead = path.join(packagePath, 'spec/test_files/outline-view-tests.fountain')
       @fileText = fs.readFileSync(fileToRead, 'utf8')
       @fileLines = @fileText.split('\n')
 
@@ -167,4 +171,3 @@ describe 'Fountain Outline View', ->
 
     it 'should be able to flatten massive nested scene list', ->
       expect(@fov.flatten(NESTED_SCENE_LIST, [])).toEqual(FLATTENED_SCENE_LIST)
-
