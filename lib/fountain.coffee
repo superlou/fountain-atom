@@ -85,7 +85,7 @@ module.exports = Fountain =
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
         return atom.notifications.addInfo("File must be saved to render PDF preview")
-      projectPath = if event then event.path.split('/') else activeEditorPath.split('/')
+      projectPath = if event then event.path.replace(/\\/g,'/').split('/') else activeEditorPath.replace(/\\/g,'/').split('/')
       fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
@@ -101,7 +101,7 @@ module.exports = Fountain =
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
         return atom.notifications.addInfo("File must be saved to export PDF")
-      projectPath = activeEditorPath.split('/')
+      projectPath = activeEditorPath.replace(/\\/g,'/').split('/')
       fileName = projectPath.pop()
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
