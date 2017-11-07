@@ -29,3 +29,7 @@ PERSON (CONT'D)
 /*^ entity.name.character.fountain */
 Hello world!
 /*^ string.other.dialogue.fountain */
+
+@ronald
+/*^ entity.name.character.fountain */
+I should be a forced character even though I'm lowercase!
