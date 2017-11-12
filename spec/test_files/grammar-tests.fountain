@@ -33,3 +33,14 @@ Hello world!
 @ronald
 /*^ entity.name.character.fountain */
 I should be a forced character even though I'm lowercase.
+
+Lyrics are heard through the door.
+
+~This song right here,
+/*^ lyric.fountain */
+~is not sung by a characteeer.
+/*^ lyric.fountain */
+
+LAURIELLA
+~Interestingly, Afterwriting doesn't allow multiple lines of lyric in it's rendering.
+/*^ lyric.fountain */

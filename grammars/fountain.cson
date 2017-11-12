@@ -15,6 +15,7 @@
   { 'include': '#synopses' }
   { 'include': '#transitions' }
   { 'include': '#dialogue' }
+  { 'include': '#lyrics' }
   { 'include': '#markup' }
   { 'include': '#notes' }
   { 'include': '#pagebreaks' }
@@ -55,6 +56,9 @@
     'applyEndPatternLast': 1
     'patterns': [
       {
+        'include': '#lyrics'
+      }
+      {
         'name': 'comment.block.fountain'
         'begin': '/\\*'
         'end': '\\*/'
@@ -67,6 +71,15 @@
         ]
       }
       { 'include': '#markup' }
+    ]
+  }
+
+  'lyrics': {
+    'patterns': [
+      {
+        'match': '~.*$'
+        'name': 'lyric.fountain'
+      }
     ]
   }
 
