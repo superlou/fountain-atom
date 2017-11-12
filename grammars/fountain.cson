@@ -1,4 +1,4 @@
-# http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/
+# Based on http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/
 
 'name': 'Fountain'
 'scopeName': 'source.fountain'
@@ -8,14 +8,6 @@
 ]
 
 'patterns': [
-  # {
-  #   'match': '((EXT)|(INT)|(\\.[A-Z]+)).*$'
-  #   'name': 'fountain.scene'
-  # }
-  # {
-  #   'match': '^[A-Z 0-9\'\(\)\.^]+$'
-  #   'name': 'fountain.character'
-  # }
   { 'include': '#comments' }
   { 'include': '#title_page' }
   { 'include': '#scene_headings' }
@@ -23,7 +15,6 @@
   { 'include': '#synopses' }
   { 'include': '#transitions' }
   { 'include': '#dialogue' }
-  { 'include': '#characters' }
   { 'include': '#markup' }
   { 'include': '#notes' }
   { 'include': '#pagebreaks' }
@@ -52,17 +43,9 @@
     'end': '\\*/'
   }
 
-  # Not sure if this is doing anything.  Character names seem to be taken character
-  # of by the dialogue match group.  Make sure to keep this in sync with the begin
-  # pattern in dialogue.
-  'characters': {
-    'name': 'entity.name.character.fountain'
-    'match': '^.[\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+$'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
-  }
-
   'dialogue': {
     'contentName': 'string.other.dialogue.fountain'
-    'begin': '([\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+(\\s*\\^)?$)' # ([A-Z ().\-][A-Z0-9 ().\-]+(\s*\^)?$)
+    'begin': '((@.+$)|([\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+(\\s*\\^)?$))'
     'end': '^$'
     'beginCaptures': {
       1: {
