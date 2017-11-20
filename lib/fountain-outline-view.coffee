@@ -29,10 +29,9 @@ class FountainOutlineView extends ScrollView
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'panel-heading', =>
-#        TODO: ADD BACK WHEN PARENT REORDERING COMPLETED
-#        @a class: 'outline-lock', =>
-#          @span id: 'outlineLock', class: 'icon icon-lock'
-#          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
+        @a class: 'outline-lock', =>
+          @span id: 'outlineLock', class: 'icon icon-lock'
+          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
         @div class: 'panel-heading-text', "Fountain Outline"
         @a class: 'pdf-download-button', =>
           @span id: 'pdfDownload', class: 'icon icon-file-pdf'
@@ -45,6 +44,7 @@ class FountainOutlineView extends ScrollView
   serialize: ->
 
   destroy: ->
+    @clearEventHandlers()
     @subscriptions.dispose()
     @editorSubs.dispose()
     @element.remove()
@@ -112,7 +112,7 @@ class FountainOutlineView extends ScrollView
       if scene.type == 'synopsis'
         continue
       formatted += '<li class="outline-item ' + scene.type + ' depth-' + scene.depth + '"'
-      formatted += ' data-line="'+ scene.line + '">'
+      formatted += ' data-line="'+ scene.line + '" end-line="'+ scene.endline + '">'
       formatted += '<span class="icon icon-text">' + scene.title + '</span>'
 
       if scene.hasOwnProperty('children') and scene.children.length > 0
@@ -131,7 +131,30 @@ class FountainOutlineView extends ScrollView
     ref = text.split('\n')
     scenes = @getNestedChildren([ref, 0, 0])
     scenes = scenes[0]
+    @setEndlines(scenes, null, ref.length)
     scenes
+
+  setEndlines: (scenes, nextParentSiblingLine, totalLineCount) ->
+    nextParentSiblingLine ||= totalLineCount
+    i = 0
+    while i < scenes.length
+      nextSiblingLine
+
+      # last element
+      if i == scenes.length - 1
+        nextSiblingLine = nextParentSiblingLine
+        scenes[i].endline = nextParentSiblingLine
+        
+      # all other elements can use the next index
+      else
+        nextSiblingLine  = scenes[i+1].line
+        scenes[i].endline = scenes[i+1].line
+
+      #process children
+      if scenes[i].children
+        @setEndlines(scenes[i].children, nextSiblingLine)
+
+      i++
 
   getNestedChildren: (scenes) ->
     out = []
@@ -217,7 +240,7 @@ class FountainOutlineView extends ScrollView
 
         @setActiveEditorBuffer(newFileText)
 
-        @updateList()
+#        @updateList()
 
     })
     sortable
@@ -234,12 +257,8 @@ class FountainOutlineView extends ScrollView
 
   getOldLineIndexes: (oldFileLines, sceneList, movingElement) =>
     # grab details about scene before array mutates
-    sceneCount = sceneList.length
     oldStartLine = parseInt(movingElement.item.attributes[1].value)
-    if movingElement.oldIndex == sceneCount - 1
-      oldEndLine = oldFileLines.length
-    else
-      oldEndLine = parseInt(sceneList[movingElement.oldIndex+1].line)
+    oldEndLine = parseInt(movingElement.item.attributes[2].value)
     [oldStartLine, oldEndLine]
 
   getNewStartLineIndex: (oldFileLines, sceneList, oldIndex, newIndex) =>
