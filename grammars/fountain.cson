@@ -223,7 +223,7 @@
     'match': '^\\s*(>.*|[A-Z ]+ TO:)$'
   }
 
- 'scene_headings': {
+  'scene_headings': {
     'match': '^\\s*(\\..*?|(?:INT|int|EXT|ext|EST|est|INT|int\\.\/EXT|ext|INT|int\/EXT|ext|I\/E|i/e)(?:\\.| ))(.*?)(?<!  )(#[A-Za-z0-9\\-.]+#)?$'
     'captures': {
       1: { 'name': 'keyword.other.heading.scene.fountain' }
@@ -232,19 +232,42 @@
     }
   }
 
- # 'sections': {
- #   'begin': '\\G(#{1,6})(?!#)\\s*(?=\\S)'
- #   'captures': {
- #     1: { 'name': 'punctuation.definition.section.fountain' }
- #   }
- #   'contentName': 'entity.name.section.fountain'
- #   'end': '\\s*(#*)$\\n?'
- #   'name': 'markup.section.fountain'
- #   'patterns': [
- #     { 'include': '#inline' }
- #   ]
- # }
- #
+  'sections': {
+    'name': 'sections'
+    'patterns': [
+      {
+        'name': 'markup.heading.heading-6.gfm'
+        'begin': '^(#{6})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-5.gfm'
+        'begin': '^(#{5})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-4.gfm'
+        'begin': '^(#{4})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-3.gfm'
+        'begin': '^(#{3})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-2.gfm'
+        'begin': '^(#{2})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-1.gfm'
+        'begin': '^(#{1})(\\s*)'
+        'end': '$'
+      }
+    ]
+  }
+
  # 'synopsis': {
  #   'begin': '\\G(={1,6})(?!=)\\s*(?=\\S)'
  #   'captures': {
