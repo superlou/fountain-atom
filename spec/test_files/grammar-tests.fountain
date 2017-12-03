@@ -29,3 +29,40 @@ PERSON (CONT'D)
 /*^ entity.name.character.fountain */
 Hello world!
 /*^ string.other.dialogue.fountain */
+
+@ronald
+/*^ entity.name.character.fountain */
+I should be a forced character even though I'm lowercase.
+
+Lyrics are heard through the door.
+
+~This song right here,
+/*^ lyric.fountain */
+~is not sung by a characteeer.
+/*^ lyric.fountain */
+
+LAURIELLA
+~Interestingly, Afterwriting doesn't allow multiple lines of lyric in it's rendering.
+/*^ lyric.fountain */
+
+# Section
+/*^ markup.heading.heading-1.gfm */
+
+Ready for it?  Here comes...
+
+## Sub-section.
+/*^ markup.heading.heading-2.gfm */
+
+Now, that's how to subsection.  And, here's the rest of them:
+
+### Level 3 section
+/*^ markup.heading.heading-3.gfm */
+
+#### Level 4 section
+/*^ markup.heading.heading-4.gfm */
+
+##### Level 5 section
+/*^ markup.heading.heading-5.gfm */
+
+###### Level 6 section
+/*^ markup.heading.heading-6.gfm */
