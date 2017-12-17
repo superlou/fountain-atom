@@ -76,12 +76,15 @@ class FountainOutlineView extends ScrollView
         @editor.setCursorBufferPosition(position)
         @editor.moveToFirstCharacterOfLine()
 
+    @scenesHidden ||= false
+    @setSceneHiddenState()
     showScenesHandler = $("#showScenesCheckbox")
-      .on 'click', (e) ->
+      .on 'click', (e) =>
         if e.currentTarget.checked
-          $('li.scene').hide()
+          @scenesHidden = true
         else
-          $('li.scene').show()
+          @scenesHidden = false
+        @setSceneHiddenState()
 
     sortable.option("disabled", @outlineLocked)
     @setOutlineLockIconState()
@@ -100,6 +103,12 @@ class FountainOutlineView extends ScrollView
   clearEventHandlers: () ->
     _.each(@eventHandlers, (handler) -> handler.off())
     @eventHandlers = []
+
+  setSceneHiddenState: () =>
+    if (@scenesHidden)
+      $('li.scene').hide()
+    else
+      $('li.scene').show()
 
   setOutlineLockIconState: () =>
     if (@outlineLocked)
