@@ -149,6 +149,9 @@ class FountainOutlineView extends ScrollView
     while i < scenes.length
       nextSiblingLine
 
+      # supports drag drop when scenes hidden
+      scenes[i].parentEndline = nextParentSiblingLine
+
       # last element
       if i == scenes.length - 1
         nextSiblingLine = nextParentSiblingLine
@@ -272,11 +275,27 @@ class FountainOutlineView extends ScrollView
 
   getNewStartLineIndex: (oldFileLines, sceneList, oldIndex, newIndex) =>
     newStartLine = null
+
     # account for array index changes
     if (newIndex > oldIndex)
       newIndex += 1
+
     if (sceneList[newIndex])
-      newStartLine = parseInt(sceneList[newIndex].line)
+
+      if (@scenesHidden)
+        # if the transition is to
+        #   the first position in the script
+        #     or
+        #   the first position under a parent
+        if (sceneList[newIndex].type != 'scene' && (!sceneList[newIndex-1] || sceneList[newIndex-1].endline == sceneList[newIndex].parentEndline))
+          newStartLine = parseInt(sceneList[newIndex].line)
+        else
+          # index to the parent to place after all children
+          newStartLine = parseInt(sceneList[newIndex-1].endline)
+
+      else
+        newStartLine = parseInt(sceneList[newIndex].line)
+
     else
       # they can manage any newline gaps
       newStartLine = oldFileLines.length - 1
