@@ -242,17 +242,23 @@ class FountainOutlineView extends ScrollView
         [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
 
       onUpdate: (evt) =>
-        # scene moved, so generate new file #
+
         oldIndex = evt.oldIndex
         newIndex = evt.newIndex
 
-        newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
+        newLineFallsWithinOwnBounds = sceneList[newIndex].line > sceneList[oldIndex].line && sceneList[newIndex].line < sceneList[oldIndex].endline
 
-        newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
+        if (!newLineFallsWithinOwnBounds)
 
-        @setActiveEditorBuffer(newFileText)
+          # element moved, so generate new buffer contents #
+          newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
+          newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
+          @setActiveEditorBuffer(newFileText)
 
-#        @updateList()
+        else
+
+          # update view manually since nothing changed
+          @updateList()
 
     })
     sortable
@@ -280,14 +286,15 @@ class FountainOutlineView extends ScrollView
     if (newIndex > oldIndex)
       newIndex += 1
 
+    # if not the last array position
     if (sceneList[newIndex])
 
       if (@scenesHidden)
-        # if the transition is to
-        #   the first position in the script
-        #     or
-        #   the first position under a parent
-        if (sceneList[newIndex].type != 'scene' && (!sceneList[newIndex-1] || sceneList[newIndex-1].endline == sceneList[newIndex].parentEndline))
+
+        targetIndexIsScene = sceneList[newIndex].type == 'scene'
+        targetIsFirstChild = !sceneList[newIndex-1] || (sceneList[newIndex-1].endline == sceneList[newIndex].parentEndline)
+
+        if (!targetIndexIsScene && targetIsFirstChild)
           newStartLine = parseInt(sceneList[newIndex].line)
         else
           # index to the parent to place after all children
@@ -297,8 +304,13 @@ class FountainOutlineView extends ScrollView
         newStartLine = parseInt(sceneList[newIndex].line)
 
     else
-      # they can manage any newline gaps
-      newStartLine = oldFileLines.length - 1
+
+      # if has preceding sibling
+      if (sceneList[newIndex - 1])
+        newStartLine = sceneList[newIndex - 1].endline
+      else
+        # they can manage any newline gaps
+        newStartLine = oldFileLines.length - 1
 
     # yea, this is an intermediate value
     # because we need slice lengths
