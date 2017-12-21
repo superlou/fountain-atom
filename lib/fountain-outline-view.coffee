@@ -236,30 +236,25 @@ class FountainOutlineView extends ScrollView
     oldStartLine = null
     oldEndLine = null
 
+    @onChoose = (evt) =>
+      [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
+
+    @onUpdate = (evt) =>
+      oldIndex = evt.oldIndex
+      newIndex = evt.newIndex
+      newLineFallsWithinOwnBounds = sceneList[newIndex].line > sceneList[oldIndex].line && sceneList[newIndex].line < sceneList[oldIndex].endline
+      if (!newLineFallsWithinOwnBounds)
+        # element moved, so generate new buffer contents #
+        newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
+        newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
+        @setActiveEditorBuffer(newFileText)
+      else
+        # update view manually since nothing changed
+        @updateList()
+
     sortable = Sortable.create(outlineElement, {
-
-      onChoose: (evt) =>
-        [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
-
-      onUpdate: (evt) =>
-
-        oldIndex = evt.oldIndex
-        newIndex = evt.newIndex
-
-        newLineFallsWithinOwnBounds = sceneList[newIndex].line > sceneList[oldIndex].line && sceneList[newIndex].line < sceneList[oldIndex].endline
-
-        if (!newLineFallsWithinOwnBounds)
-
-          # element moved, so generate new buffer contents #
-          newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
-          newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
-          @setActiveEditorBuffer(newFileText)
-
-        else
-
-          # update view manually since nothing changed
-          @updateList()
-
+      onChoose: @onChoose
+      onUpdate: @onUpdate
     })
     sortable
 
@@ -335,4 +330,5 @@ class FountainOutlineView extends ScrollView
 
   setActiveEditorBuffer: (newFileText) =>
     if editor = atom.workspace.getActiveTextEditor()
-      editor.setText(newFileText)
+      @editor = editor
+      @editor.setText(newFileText)
