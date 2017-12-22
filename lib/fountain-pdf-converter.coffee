@@ -1,8 +1,11 @@
 {BufferedNodeProcess} = require 'atom'
 fs = require 'fs'
 path = require 'path'
+PdfConfigGenerator = require './fountain-pdf-config-generator.coffee'
 
 class PdfConverter
+
+  configGenerator = new PdfConfigGenerator()
 
   createPreview: (projectPath, fileText) ->
     @initiateConversion(projectPath, fileText, true)
@@ -76,6 +79,7 @@ class PdfConverter
       return Promise.resolve(outputFullPath)
 
     return notifyBegin()
+      .then(configGenerator.createConfig)
       .then(writeTempFile)
       .then(generatePdf)
       .then(notifySuccess)
