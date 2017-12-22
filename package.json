@@ -1,14 +1,14 @@
 {
   "name": "fountain",
   "main": "./lib/fountain",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
   "deserializers": {
     "FountainPreviewView": "deserializeFountainPreviewView"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/superlou/fountain-atom.git"
+    "url": "https://github.com/superlou/fountain-atom.git"
   },
   "license": "GPLv3",
   "engines": {

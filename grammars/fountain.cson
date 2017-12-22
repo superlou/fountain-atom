@@ -1,4 +1,4 @@
-# http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/
+# Based on http://www.candlerblog.com/2012/09/10/fountain-for-sublime-text/
 
 'name': 'Fountain'
 'scopeName': 'source.fountain'
@@ -8,14 +8,6 @@
 ]
 
 'patterns': [
-  # {
-  #   'match': '((EXT)|(INT)|(\\.[A-Z]+)).*$'
-  #   'name': 'fountain.scene'
-  # }
-  # {
-  #   'match': '^[A-Z 0-9\'\(\)\.^]+$'
-  #   'name': 'fountain.character'
-  # }
   { 'include': '#comments' }
   { 'include': '#title_page' }
   { 'include': '#scene_headings' }
@@ -23,7 +15,7 @@
   { 'include': '#synopses' }
   { 'include': '#transitions' }
   { 'include': '#dialogue' }
-  { 'include': '#characters' }
+  { 'include': '#lyrics' }
   { 'include': '#markup' }
   { 'include': '#notes' }
   { 'include': '#pagebreaks' }
@@ -52,17 +44,9 @@
     'end': '\\*/'
   }
 
-  # Not sure if this is doing anything.  Character names seem to be taken character
-  # of by the dialogue match group.  Make sure to keep this in sync with the begin
-  # pattern in dialogue.
-  'characters': {
-    'name': 'entity.name.character.fountain'
-    'match': '^.[\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+$'  # \n.[A-Z ().\-][A-Z0-9 ().\-]+
-  }
-
   'dialogue': {
     'contentName': 'string.other.dialogue.fountain'
-    'begin': '([\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+(\\s*\\^)?$)' # ([A-Z ().\-][A-Z0-9 ().\-]+(\s*\^)?$)
+    'begin': '((@.+$)|([\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+(\\s*\\^)?$))'
     'end': '^$'
     'beginCaptures': {
       1: {
@@ -71,6 +55,9 @@
     }
     'applyEndPatternLast': 1
     'patterns': [
+      {
+        'include': '#lyrics'
+      }
       {
         'name': 'comment.block.fountain'
         'begin': '/\\*'
@@ -84,6 +71,15 @@
         ]
       }
       { 'include': '#markup' }
+    ]
+  }
+
+  'lyrics': {
+    'patterns': [
+      {
+        'match': '~.*$'
+        'name': 'lyric.fountain'
+      }
     ]
   }
 
@@ -227,7 +223,7 @@
     'match': '^\\s*(>.*|[A-Z ]+ TO:)$'
   }
 
- 'scene_headings': {
+  'scene_headings': {
     'match': '^\\s*(\\..*?|(?:INT|int|EXT|ext|EST|est|INT|int\\.\/EXT|ext|INT|int\/EXT|ext|I\/E|i/e)(?:\\.| ))(.*?)(?<!  )(#[A-Za-z0-9\\-.]+#)?$'
     'captures': {
       1: { 'name': 'keyword.other.heading.scene.fountain' }
@@ -236,19 +232,42 @@
     }
   }
 
- # 'sections': {
- #   'begin': '\\G(#{1,6})(?!#)\\s*(?=\\S)'
- #   'captures': {
- #     1: { 'name': 'punctuation.definition.section.fountain' }
- #   }
- #   'contentName': 'entity.name.section.fountain'
- #   'end': '\\s*(#*)$\\n?'
- #   'name': 'markup.section.fountain'
- #   'patterns': [
- #     { 'include': '#inline' }
- #   ]
- # }
- #
+  'sections': {
+    'name': 'sections'
+    'patterns': [
+      {
+        'name': 'markup.heading.heading-6.gfm'
+        'begin': '^(#{6})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-5.gfm'
+        'begin': '^(#{5})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-4.gfm'
+        'begin': '^(#{4})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-3.gfm'
+        'begin': '^(#{3})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-2.gfm'
+        'begin': '^(#{2})(\\s*)'
+        'end': '$'
+      }
+      {
+        'name': 'markup.heading.heading-1.gfm'
+        'begin': '^(#{1})(\\s*)'
+        'end': '$'
+      }
+    ]
+  }
+
  # 'synopsis': {
  #   'begin': '\\G(={1,6})(?!=)\\s*(?=\\S)'
  #   'captures': {
