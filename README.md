@@ -7,6 +7,7 @@ This package aims to provide syntax highlighting and utilities to improve the ex
 * Outline list navigator (<kbd>ctrl</kbd> <kbd>alt</kbd> <kbd>o</kbd>)
 * **[new!]** PDF preview (<kbd>ctrl</kbd> <kbd>alt</kbd> <kbd>shift</kbd> <kbd>m</kbd>)
 * **[new!]** PDF export (<kbd>ctrl</kbd> <kbd>alt</kbd> <kbd>shift</kbd> <kbd>x</kbd>)
+* **[new!]** PDF preview and export configuration in the package settings
 * Symbol listing via the [symbols-view package](https://github.com/atom/symbols-view) (<kbd>crtl</kbd> <kbd>r</kbd>)
 
 ## Notes:
