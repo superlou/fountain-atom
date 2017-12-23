@@ -237,9 +237,11 @@ class FountainOutlineView extends ScrollView
     oldEndLine = null
 
     @onChoose = (evt) =>
+#      console.debug("onChoose", evt.oldIndex)
       [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
 
     @onUpdate = (evt) =>
+#      console.debug("onUpdate", evt.oldIndex, evt.newIndex)
       oldIndex = evt.oldIndex
       newIndex = evt.newIndex
       newLineFallsWithinOwnBounds = sceneList[newIndex].line > sceneList[oldIndex].line && sceneList[newIndex].line < sceneList[oldIndex].endline
@@ -272,6 +274,7 @@ class FountainOutlineView extends ScrollView
     # grab details about scene before array mutates
     oldStartLine = parseInt(movingElement.item.attributes[1].value)
     oldEndLine = parseInt(movingElement.item.attributes[2].value)
+#    console.debug("getOldIndexLines", oldStartLine, oldEndLine)
     [oldStartLine, oldEndLine]
 
   getNewStartLineIndex: (oldFileLines, sceneList, oldIndex, newIndex) =>
