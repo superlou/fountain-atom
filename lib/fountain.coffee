@@ -208,8 +208,7 @@ module.exports = Fountain =
       text = activeEditor.getSelectedText() || activeEditor.getText()
       pdfConverter = new PdfConverter()
       pdfConverter.createPreview((if event then event.path else activeEditorPath), text).then (uri) =>
-        atom.workspace.open(uri, {"searchAllPanes":true})
-        if !event then activeEditor.onDidSave(this.pdfPreview)
+        atom.workspace.open(uri, {searchAllPanes:true})
     else
       atom.notifications.addInfo("No fountain file is currently targeted")
 
