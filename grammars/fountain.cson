@@ -33,7 +33,13 @@
         'name': 'markup.underline.link.text'
       }
       {
+        'include': '#comments'
+      }
+      {
         'include': '#markup'
+      }
+      {
+        'include': '#notes'
       }
     ]
   }
@@ -42,6 +48,12 @@
     'name': 'comment.block.fountain'
     'begin': '/\\*'
     'end': '\\*/'
+  }
+
+  'notes': {
+    'name': 'comment.note.fountain'
+    'begin': '\\[\\['
+    'end': '(^$|\\]\\])'
   }
 
   'dialogue': {
@@ -191,12 +203,6 @@
     'patterns': [
       { 'include': '#nested_parens' }
     ]
-  }
-
-  'notes': {
-    'name': 'entity.other.note.fountain'
-    'begin': '\\[\\['
-    'end': '(^$|\\]\\])'
   }
 
   'pagebreaks': {

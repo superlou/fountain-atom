@@ -66,3 +66,13 @@ Now, that's how to subsection.  And, here's the rest of them:
 
 ###### Level 6 section
 /*^ markup.heading.heading-6.gfm */
+
+INT. WEST LAKE
+
+The water glints oily around the half submerged [[rename]] SS JACKRABBIT.
+/*                                              ^ comment.note.fountain */
+
+[[Improve description]]
+/*^ comment.note.fountain */
+
+Lauriella waits patiently.
