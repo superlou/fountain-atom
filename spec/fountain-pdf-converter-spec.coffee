@@ -15,6 +15,7 @@ describe 'Fountain PDF Converter', ->
 
   describe 'conversion paths', ->
 
+    asyncMaxWaitTime = 5000
     flag = false
 
     beforeEach ->
@@ -32,11 +33,11 @@ describe 'Fountain PDF Converter', ->
       runs () ->
         @pdfConverter.toFile(path.parse(fileName), fileContent).then () ->
           flag = true
-      , 5000
+      , asyncMaxWaitTime
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -49,7 +50,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()
@@ -66,11 +67,11 @@ describe 'Fountain PDF Converter', ->
       runs () ->
         @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
-      , 5000
+      , asyncMaxWaitTime
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -91,11 +92,11 @@ describe 'Fountain PDF Converter', ->
       runs () ->
         @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
-      , 5000
+      , asyncMaxWaitTime
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -115,11 +116,11 @@ describe 'Fountain PDF Converter', ->
       runs () ->
         @pdfConverter.initiateConversion(fileName, fileContent).then () ->
           flag = true
-      , 5000
+      , asyncMaxWaitTime
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         fileBuffer = fs.readFileSync(pdfName)
@@ -132,7 +133,7 @@ describe 'Fountain PDF Converter', ->
 
       waitsFor () ->
         return flag
-      , "flag set", 3000
+      , "flag set", asyncMaxWaitTime
 
       runs () ->
         expect(() -> fs.readFileSync(pdfName)).toThrow()

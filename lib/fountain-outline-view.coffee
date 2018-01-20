@@ -29,10 +29,9 @@ class FountainOutlineView extends ScrollView
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'panel-heading', =>
-#        TODO: ADD BACK WHEN PARENT REORDERING COMPLETED
-#        @a class: 'outline-lock', =>
-#          @span id: 'outlineLock', class: 'icon icon-lock'
-#          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
+        @a class: 'outline-lock', =>
+          @span id: 'outlineLock', class: 'icon icon-lock'
+          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
         @div class: 'panel-heading-text', "Fountain Outline"
         @a class: 'pdf-download-button', =>
           @span id: 'pdfDownload', class: 'icon icon-file-pdf'
@@ -45,6 +44,7 @@ class FountainOutlineView extends ScrollView
   serialize: ->
 
   destroy: ->
+    @clearEventHandlers()
     @subscriptions.dispose()
     @editorSubs.dispose()
     @element.remove()
@@ -76,12 +76,15 @@ class FountainOutlineView extends ScrollView
         @editor.setCursorBufferPosition(position)
         @editor.moveToFirstCharacterOfLine()
 
+    @scenesHidden ||= false
+    @setSceneHiddenState()
     showScenesHandler = $("#showScenesCheckbox")
-      .on 'click', (e) ->
+      .on 'click', (e) =>
         if e.currentTarget.checked
-          $('li.scene').hide()
+          @scenesHidden = true
         else
-          $('li.scene').show()
+          @scenesHidden = false
+        @setSceneHiddenState()
 
     sortable.option("disabled", @outlineLocked)
     @setOutlineLockIconState()
@@ -101,6 +104,12 @@ class FountainOutlineView extends ScrollView
     _.each(@eventHandlers, (handler) -> handler.off())
     @eventHandlers = []
 
+  setSceneHiddenState: () =>
+    if (@scenesHidden)
+      $('li.scene').hide()
+    else
+      $('li.scene').show()
+
   setOutlineLockIconState: () =>
     if (@outlineLocked)
       $('.outline-lock-overlay-icon').css("visibility", "hidden");
@@ -112,7 +121,7 @@ class FountainOutlineView extends ScrollView
       if scene.type == 'synopsis'
         continue
       formatted += '<li class="outline-item ' + scene.type + ' depth-' + scene.depth + '"'
-      formatted += ' data-line="'+ scene.line + '">'
+      formatted += ' data-line="'+ scene.line + '" end-line="'+ scene.endline + '">'
       formatted += '<span class="icon icon-text">' + scene.title + '</span>'
 
       if scene.hasOwnProperty('children') and scene.children.length > 0
@@ -131,7 +140,33 @@ class FountainOutlineView extends ScrollView
     ref = text.split('\n')
     scenes = @getNestedChildren([ref, 0, 0])
     scenes = scenes[0]
+    @setEndlines(scenes, null, ref.length)
     scenes
+
+  setEndlines: (scenes, nextParentSiblingLine, totalLineCount) ->
+    nextParentSiblingLine ||= totalLineCount
+    i = 0
+    while i < scenes.length
+      nextSiblingLine
+
+      # supports drag drop when scenes hidden
+      scenes[i].parentEndline = nextParentSiblingLine
+
+      # last element
+      if i == scenes.length - 1
+        nextSiblingLine = nextParentSiblingLine
+        scenes[i].endline = nextParentSiblingLine
+        
+      # all other elements can use the next index
+      else
+        nextSiblingLine  = scenes[i+1].line
+        scenes[i].endline = scenes[i+1].line
+
+      #process children
+      if scenes[i].children
+        @setEndlines(scenes[i].children, nextSiblingLine)
+
+      i++
 
   getNestedChildren: (scenes) ->
     out = []
@@ -201,24 +236,27 @@ class FountainOutlineView extends ScrollView
     oldStartLine = null
     oldEndLine = null
 
-    sortable = Sortable.create(outlineElement, {
+    @onChoose = (evt) =>
+#      console.debug("onChoose", evt.oldIndex)
+      [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
 
-      onChoose: (evt) =>
-        [oldStartLine, oldEndLine] = @getOldLineIndexes(oldFileLines, sceneList, evt)
-
-      onUpdate: (evt) =>
-        # scene moved, so generate new file #
-        oldIndex = evt.oldIndex
-        newIndex = evt.newIndex
-
+    @onUpdate = (evt) =>
+#      console.debug("onUpdate", evt.oldIndex, evt.newIndex)
+      oldIndex = evt.oldIndex
+      newIndex = evt.newIndex
+      newLineFallsWithinOwnBounds = sceneList[newIndex].line > sceneList[oldIndex].line && sceneList[newIndex].line < sceneList[oldIndex].endline
+      if (!newLineFallsWithinOwnBounds)
+        # element moved, so generate new buffer contents #
         newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
-
         newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
-
         @setActiveEditorBuffer(newFileText)
-
+      else
+        # update view manually since nothing changed
         @updateList()
 
+    sortable = Sortable.create(outlineElement, {
+      onChoose: @onChoose
+      onUpdate: @onUpdate
     })
     sortable
 
@@ -234,24 +272,43 @@ class FountainOutlineView extends ScrollView
 
   getOldLineIndexes: (oldFileLines, sceneList, movingElement) =>
     # grab details about scene before array mutates
-    sceneCount = sceneList.length
     oldStartLine = parseInt(movingElement.item.attributes[1].value)
-    if movingElement.oldIndex == sceneCount - 1
-      oldEndLine = oldFileLines.length
-    else
-      oldEndLine = parseInt(sceneList[movingElement.oldIndex+1].line)
+    oldEndLine = parseInt(movingElement.item.attributes[2].value)
+#    console.debug("getOldIndexLines", oldStartLine, oldEndLine)
     [oldStartLine, oldEndLine]
 
   getNewStartLineIndex: (oldFileLines, sceneList, oldIndex, newIndex) =>
     newStartLine = null
+
     # account for array index changes
     if (newIndex > oldIndex)
       newIndex += 1
+
+    # if not the last array position
     if (sceneList[newIndex])
-      newStartLine = parseInt(sceneList[newIndex].line)
+
+      if (@scenesHidden)
+
+        targetIndexIsScene = sceneList[newIndex].type == 'scene'
+        targetIsFirstChild = !sceneList[newIndex-1] || (sceneList[newIndex-1].endline == sceneList[newIndex].parentEndline)
+
+        if (!targetIndexIsScene && targetIsFirstChild)
+          newStartLine = parseInt(sceneList[newIndex].line)
+        else
+          # index to the parent to place after all children
+          newStartLine = parseInt(sceneList[newIndex-1].endline)
+
+      else
+        newStartLine = parseInt(sceneList[newIndex].line)
+
     else
-      # they can manage any newline gaps
-      newStartLine = oldFileLines.length - 1
+
+      # if has preceding sibling
+      if (sceneList[newIndex - 1])
+        newStartLine = sceneList[newIndex - 1].endline
+      else
+        # they can manage any newline gaps
+        newStartLine = oldFileLines.length - 1
 
     # yea, this is an intermediate value
     # because we need slice lengths
@@ -276,4 +333,5 @@ class FountainOutlineView extends ScrollView
 
   setActiveEditorBuffer: (newFileText) =>
     if editor = atom.workspace.getActiveTextEditor()
-      editor.setText(newFileText)
+      @editor = editor
+      @editor.setText(newFileText)
