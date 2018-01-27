@@ -56,6 +56,12 @@
     'end': '(^$|\\]\\])'
   }
 
+  'synopses': {
+    'name': 'comment.synopses.fountain'
+    'begin': '^='
+    'end': '^$'
+  }
+
   'dialogue': {
     'contentName': 'string.other.dialogue.fountain'
     'begin': '((@.+$)|([\\p{Lu} ().\\-][\\p{Lu}0-9 ()\'.\\-]+(\\s*\\^)?$))'

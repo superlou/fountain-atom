@@ -76,3 +76,15 @@ The water glints oily around the half submerged [[rename]] SS JACKRABBIT.
 /*^ comment.note.fountain */
 
 Lauriella waits patiently.
+
+INT. TESTING SYNOPSIS
+
+= This scene introduces the smell of hot metal.
+/*^ comment.synopses.fountain */
+
+The scene starts.
+
+=this synopses is sloppy and doesn't have a space after the equal sign.
+/*^ comment.synopses.fountain */
+
+More scene description continues here.
