@@ -156,7 +156,7 @@ class FountainOutlineView extends ScrollView
       if i == scenes.length - 1
         nextSiblingLine = nextParentSiblingLine
         scenes[i].endline = nextParentSiblingLine
-        
+
       # all other elements can use the next index
       else
         nextSiblingLine  = scenes[i+1].line
@@ -176,7 +176,7 @@ class FountainOutlineView extends ScrollView
     while i < arr.length
       if arr[i].match(/^#+/)
         matched = arr[i].match(/^(#+)(.+)/)
-        if matched[1].length > depth
+        if matched && matched[1].length > depth
           nestedKids = @getNestedChildren([arr, i+1, matched[1].length])
           currentScene =
             line: i
