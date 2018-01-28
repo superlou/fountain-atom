@@ -174,14 +174,17 @@ class FountainOutlineView extends ScrollView
     i = scenes[1]
     depth = scenes[2]
     while i < arr.length
-      if arr[i].match(/^#+/)
+      section = arr[i].match(/^#+/)
+      if section
         matched = arr[i].match(/^(#+)(.+)/)
-        if matched && matched[1].length > depth
-          nestedKids = @getNestedChildren([arr, i+1, matched[1].length])
+        if section[0].length > depth
+          nestedKids = @getNestedChildren([arr, i+1, section[0].length])
+          matchedTitleText = if matched then matched[2].trim() else ""
+          hasTitle = matched && matchedTitleText && matchedTitleText != "#"
           currentScene =
             line: i
-            title: matched[2]
-            type: "heading" + matched[1].length
+            title: if hasTitle then matched[2] else "(untitled section)"
+            type: "heading" + section[0].length
             hasNote: false
             children: nestedKids[0]
             depth: depth
