@@ -1,8 +1,8 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Disposable} = require 'atom'
 url = require 'url'
 PdfConverter = require './fountain-pdf-converter.coffee'
+FountainOutlineView = require './fountain-outline-view.coffee'
 
-FountainOutlineView = null
 FountainPreviewView = null
 renderer = null
 
@@ -138,12 +138,27 @@ module.exports = Fountain =
   subscriptions: null
 
   activate: (state) ->
-
     require('atom-package-deps').install('fountain', true)
 
     # Events subscribed to in atom's system can be easily cleaned up with
     # a CompositeDisposable
     @subscriptions = new CompositeDisposable
+
+    # Add an opener, command, and diposable for the test view
+    @subscriptions.add atom.workspace.addOpener (uri) ->
+      if uri == 'atom://fountain-outline'
+        outline_view = new FountainOutlineView();
+        # This is really hacky and seems to count on a race condition
+        # between closing Atom and serializing state to leave it visible
+        # when reloading Atom but not when the pane "x" is "clicked" to close.
+        outline_view.emitter.on 'closed-outline-view', =>
+          @outlineViewIsVisible = false
+        outline_view
+
+    @subscriptions.add new Disposable () =>
+      atom.workspace.getPaneItems().forEach (item) =>
+        if item instanceof FountainOutlineView
+          item.destroy()
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
@@ -151,6 +166,8 @@ module.exports = Fountain =
       'fountain:preview-legacy' :=> @preview(),  # deprecated TODO: remove in a later release
       'fountain:preview' :=> @pdfPreview(),
       'fountain:export-PDF' :=> @pdfExport()
+
+    @outlineViewIsVisible = false
 
     if state.outlineViewIsVisible
       @toggleOutlineView()
@@ -173,25 +190,18 @@ module.exports = Fountain =
       else
         createFountainPreviewView(filePath: pathname)
 
+  toggleOutlineView: ->
+    atom.workspace.toggle('atom://fountain-outline').then (result) =>
+      @outlineViewIsVisible = if result then true else false
+
   deactivate: ->
     @subscriptions.dispose()
 
   serialize: ->
-    outlineViewIsVisible: @outlineView && @outlineView.panel.isVisible()
+    outlineViewIsVisible: @outlineViewIsVisible
 
   deserializeFountainPreviewView: (state) ->
     createFountainPreviewView(state) if state.constructor is Object
-
-  toggleOutlineView: ->
-    FountainOutlineView ?= require './fountain-outline-view'
-    @outlineView ?= new FountainOutlineView({})
-
-    if @outlineView.panel.isVisible()
-      @outlineView.panel.hide()
-    else
-      editor = atom.workspace.getActiveTextEditor()
-      @outlineView.changedPane(editor)
-      @outlineView.panel.show()
 
   preview: ->
     editor = atom.workspace.getActiveTextEditor()

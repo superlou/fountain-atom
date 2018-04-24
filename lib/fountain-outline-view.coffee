@@ -1,4 +1,4 @@
-{CompositeDisposable, Point} = require 'atom'
+{CompositeDisposable, Point, Emitter} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 
 module.exports =
@@ -7,24 +7,34 @@ class FountainOutlineView extends ScrollView
   Sortable = require('sortablejs')
   _ = require('underscore-plus')
 
-  panel: null
   outlineLocked: true
   eventHandlers: []
 
-  initialize: (state) ->
+  constructor: (serializedState) ->
     super
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
-
     @editorSubs = new CompositeDisposable
+    @emitter = new Emitter
 
-    @attach()
+  destroy: ->
+    @emitter.emit 'closed-outline-view'
+    @clearEventHandlers()
+    @subscriptions.dispose()
+    @editorSubs.dispose()
+    @element.remove()
 
-  attach: ->
-    @panel ?= atom.workspace.addRightPanel {
-      item: this
-      visible: false
-    }
+  getTitle: ->
+    'Fountain Outline'
+
+  getDefaultLocation: ->
+    'right'
+
+  getURI: ->
+    'atom://fountain-outline'
+
+  getElement: ->
+    @element
 
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
@@ -32,7 +42,7 @@ class FountainOutlineView extends ScrollView
         @a class: 'outline-lock', =>
           @span id: 'outlineLock', class: 'icon icon-lock'
           @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
-        @div class: 'panel-heading-text', "Fountain Outline"
+        @div class: 'panel-heading-text', "Draggable"
         @a class: 'pdf-download-button', =>
           @span id: 'pdfDownload', class: 'icon icon-file-pdf'
         @div class: 'show-scenes-box', =>
@@ -43,11 +53,6 @@ class FountainOutlineView extends ScrollView
 
   serialize: ->
 
-  destroy: ->
-    @clearEventHandlers()
-    @subscriptions.dispose()
-    @editorSubs.dispose()
-    @element.remove()
 
   updateList: =>
     text = @editor.getText()
@@ -64,13 +69,11 @@ class FountainOutlineView extends ScrollView
     sortable = @createSortableList(text, scenes)
 
     # EVENT HANDLER MANAGEMENT #
-
     @clearEventHandlers()
 
     jumpToHandler = $(".outline-item")
       .on 'click', (e) =>
         line = parseInt($(e.currentTarget).attr('data-line'))
-
         position = new Point(line, -1)
         @editor.scrollToBufferPosition(position)
         @editor.setCursorBufferPosition(position)
