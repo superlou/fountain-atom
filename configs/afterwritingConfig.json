@@ -1,21 +1,8 @@
 {
- "print_title_page": true,
- "show_page_numbers": true,
- "print_profile": "usletter",
- "embolden_scene_headers": true,
- "print_sections": true,
- "print_synopsis": true,
- "print_actions": true,
- "print_headers": true,
- "print_dialogues": true,
- "print_notes": false,
- "number_sections": false,
- "scenes_numbers": "none",
- "use_dual_dialogue": false,
- "each_scene_on_new_page": false,
- "split_dialogue": false,
- "double_space_between_scenes": true,
- "print_header": "",
- "print_footer": "",
- "print_watermark": ""
+  "print_title_page": true,
+  "print_sections": false,
+  "print_scene_headers": true,
+  "print_synopsis": false,
+  "embolden_scene_headers": true,
+  "show_page_numbers": true
 }
