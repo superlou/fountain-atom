@@ -46,6 +46,7 @@ class PdfConverter
     afterwritingPath = path.join(packagePath, "node_modules", "afterwriting", "awc.js")
     outputFullPath = path.join("#{if isPreview then packageTempPath else parsedPath.dir}", "#{if isPreview then '(preview) ' else ''}#{parsedPath.name}.pdf")
     configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
+    fontsPath = path.join(packagePath, "configs", "afterwritingFonts.json")
 
     notifyBegin = () =>
       if isPreview
@@ -60,7 +61,7 @@ class PdfConverter
 
     generatePdf = () =>
       command = afterwritingPath
-      args = ['--source', tempFilePath, '--pdf', outputFullPath, '--config', configPath, '--overwrite']
+      args = ['--source', tempFilePath, '--pdf', outputFullPath, '--config', configPath, "--fonts", fontsPath, '--overwrite']
       stdout = (output) -> console.log(output)
       stderr = (output) -> console.error(output)
       return new Promise (resolve, reject) =>
