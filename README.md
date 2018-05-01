@@ -23,6 +23,13 @@ This is currently a work in progress, pulling from a few different tools:
 * PDF exporting provided by [Afterwriting CLI](https://github.com/ifrost/afterwriting-labs)
 * PDF preview rendered by atom [pdf-view](https://atom.io/packages/pdf-view) package
 
+Included fonts for PDF export and preview:
+
+* [AnonymousPro](https://fontlibrary.org/en/font/anonymous-pro)
+* [CourierCode](https://fontlibrary.org/en/font/courier-code)
+* [CourierPrime](https://fontlibrary.org/en/font/courier-prime)
+* [GNUTypewriter](https://fontlibrary.org/en/font/gnutypewriter)
+
 Please open issues with feature requests that would improve your work flow.
 
 ## Outline view in action:
