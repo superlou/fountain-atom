@@ -10,7 +10,7 @@
       'submenu': [
         {
           'label': 'Toggle Outline View'
-          'command': 'fountain:toggleOutlineView'
+          'command': 'fountain:toggle-outline-view'
         }
         {
           'label': 'Show Preview'
