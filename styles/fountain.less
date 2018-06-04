@@ -7,7 +7,7 @@
 /* fountain outline view styles */
 .fountain-outline-view {
   width: 100%;
-  overflow: scroll;
+  overflow: hidden;
   cursor: default;
 }
 
@@ -18,7 +18,10 @@
 }
 
 .fountain-outline-view .panel-body{
-  padding-top: 40px;
+  position: absolute;
+  overflow: scroll;
+  top: 40px;
+  bottom: 0px;
 }
 
 .fountain-outline-view .panel-heading-text {
