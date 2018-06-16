@@ -1,9 +1,9 @@
 {CompositeDisposable, Disposable} = require 'atom'
 url = require 'url'
 PdfConverter = require './fountain-pdf-converter.coffee'
-FountainOutlineView = require './fountain-outline-view.coffee'
 
 FountainPreviewView = null
+FountainOutlineView = null
 renderer = null
 
 createFountainPreviewView = (state) ->
@@ -13,6 +13,10 @@ createFountainPreviewView = (state) ->
 isFountainPreviewView = (object) ->
   FountainPreviewView ?= require './fountain-preview-view'
   object instanceof FountainPreviewView
+
+createFountainOutlineView = () ->
+  FountainOutlineView ?= require './fountain-outline-view.coffee'
+  new FountainOutlineView();
 
 module.exports = Fountain =
 
@@ -147,12 +151,7 @@ module.exports = Fountain =
     # Add an opener, command, and diposable for the test view
     @subscriptions.add atom.workspace.addOpener (uri) ->
       if uri == 'atom://fountain-outline'
-        return new FountainOutlineView();
-
-    @subscriptions.add new Disposable () =>
-      atom.workspace.getPaneItems().forEach (item) =>
-        if item instanceof FountainOutlineView
-          item.destroy()
+        return createFountainOutlineView();
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
