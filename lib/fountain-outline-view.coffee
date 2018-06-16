@@ -38,17 +38,12 @@ class FountainOutlineView extends ScrollView
 
   @content: ->
     @div class: 'fountain-outline-view', tabindex: -1, =>
-      @div class: 'panel-heading', =>
-        @a class: 'outline-lock', =>
-          @span id: 'outlineLock', class: 'icon icon-lock'
-          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
-        @div class: 'panel-heading-text', "Draggable"
-        @a class: 'pdf-download-button', =>
-          @span id: 'pdfDownload', class: 'icon icon-file-pdf'
-        @div class: 'show-scenes-box', =>
-          @label for: 'showScenesCheckbox', "Hide Scenes:"
-          @input id: 'showScenesCheckbox', type: 'checkbox'
-      @div class: 'panel-body', =>
+      @div class: 'block controls', =>
+        @div class: 'btn-group', =>
+          @button class: 'btn', id: 'scenes_visible_btn', "Scenes"
+          @button class: 'btn', id: 'draggable_button', "Draggable"
+        @button class: 'btn icon icon-file-pdf pdf-download-button', 'PDF'
+      @div class: 'outline block', =>
         @ul class: 'outline-list', outlet: "list"
 
   serialize: ->
@@ -71,8 +66,7 @@ class FountainOutlineView extends ScrollView
     # EVENT HANDLER MANAGEMENT #
     @clearEventHandlers()
 
-    jumpToHandler = $(".outline-item")
-      .on 'click', (e) =>
+    jumpToHandler = $(".outline-item").on 'click', (e) =>
         line = parseInt($(e.currentTarget).attr('data-line'))
         position = new Point(line, -1)
         @editor.scrollToBufferPosition(position)
@@ -80,25 +74,17 @@ class FountainOutlineView extends ScrollView
         @editor.moveToFirstCharacterOfLine()
 
     @scenesHidden ||= false
-    @setSceneHiddenState()
-    showScenesHandler = $("#showScenesCheckbox")
-      .on 'click', (e) =>
-        if e.currentTarget.checked
-          @scenesHidden = true
-        else
-          @scenesHidden = false
-        @setSceneHiddenState()
+    @setScenesHidden(@scenesHidden)
+    showScenesHandler = $("#scenes_visible_btn").on 'click', (e) =>
+        @scenesHidden = !@scenesHidden
+        @setScenesHidden(@scenesHidden)
 
-    sortable.option("disabled", @outlineLocked)
-    @setOutlineLockIconState()
-    outlineLockHandler = $(".outline-lock")
-      .on 'click', (e) =>
+    @setOutlineLocked(@outlineLocked, sortable)
+    outlineLockHandler = $("#draggable_button").on 'click', (e) =>
         @outlineLocked = !@outlineLocked
-        @setOutlineLockIconState()
-        sortable.option("disabled", @outlineLocked);
+        @setOutlineLocked(@outlineLocked, sortable)
 
-    downloadHandler = $(".pdf-download-button")
-      .on 'click', (e) =>
+    downloadHandler = $(".pdf-download-button").on 'click', (e) =>
         atom.packages.getActivePackage('fountain').mainModule.pdfExport();
 
     @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
@@ -107,17 +93,13 @@ class FountainOutlineView extends ScrollView
     _.each(@eventHandlers, (handler) -> handler.off())
     @eventHandlers = []
 
-  setSceneHiddenState: () =>
-    if (@scenesHidden)
-      $('li.scene').hide()
-    else
-      $('li.scene').show()
+  setScenesHidden: (hidden) =>
+    $('li.scene').toggle(!hidden)
+    $('#scenes_visible_btn').toggleClass('selected', !hidden)
 
-  setOutlineLockIconState: () =>
-    if (@outlineLocked)
-      $('.outline-lock-overlay-icon').css("visibility", "hidden");
-    else
-      $('.outline-lock-overlay-icon').css("visibility", "visible");
+  setOutlineLocked: (locked, sortable) =>
+    sortable.option("disabled", locked);
+    $('#draggable_button').toggleClass('selected', !locked)
 
   formatList: (formatted, scenes) ->
     for scene, index in scenes
