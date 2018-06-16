@@ -147,13 +147,7 @@ module.exports = Fountain =
     # Add an opener, command, and diposable for the test view
     @subscriptions.add atom.workspace.addOpener (uri) ->
       if uri == 'atom://fountain-outline'
-        outline_view = new FountainOutlineView();
-        # This is really hacky and seems to count on a race condition
-        # between closing Atom and serializing state to leave it visible
-        # when reloading Atom but not when the pane "x" is "clicked" to close.
-        outline_view.emitter.on 'closed-outline-view', =>
-          @outlineViewIsVisible = false
-        outline_view
+        return new FountainOutlineView();
 
     @subscriptions.add new Disposable () =>
       atom.workspace.getPaneItems().forEach (item) =>
@@ -166,11 +160,6 @@ module.exports = Fountain =
       'fountain:preview-legacy' :=> @preview(),  # deprecated TODO: remove in a later release
       'fountain:preview' :=> @pdfPreview(),
       'fountain:export-PDF' :=> @pdfExport()
-
-    @outlineViewIsVisible = false
-
-    if state.outlineViewIsVisible
-      @toggleOutlineView()
 
     atom.workspace.addOpener (uri) ->
       try
@@ -191,14 +180,13 @@ module.exports = Fountain =
         createFountainPreviewView(filePath: pathname)
 
   toggleOutlineView: ->
-    atom.workspace.toggle('atom://fountain-outline').then (result) =>
-      @outlineViewIsVisible = if result then true else false
+    atom.workspace.toggle('atom://fountain-outline')
 
   deactivate: ->
     @subscriptions.dispose()
 
   serialize: ->
-    outlineViewIsVisible: @outlineViewIsVisible
+    {}
 
   deserializeFountainPreviewView: (state) ->
     createFountainPreviewView(state) if state.constructor is Object
