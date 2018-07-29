@@ -12,7 +12,7 @@ class FountainOutlineView extends ScrollView
 
   initialize: (serializedState) ->
     @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
+    @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedActiveItem)
     @editorSubs = new CompositeDisposable
     @emitter = new Emitter
 
@@ -206,18 +206,17 @@ class FountainOutlineView extends ScrollView
     out
 
 
-  clearScenes: (text) ->
-    @list.innerHTML = ""
+  clearScenes: () ->
+    @list.empty()
 
-  changedPane: (pane) =>
-    @editorSubs.dispose()
-    if pane and (typeof pane.getText == 'function')
-      @editor = pane
+  changedActiveItem: (item) =>
+    grammarId = item?.getGrammar?().id
+
+    if grammarId == 'source.fountain'
+      @editor = item
+      @editorSubs.dispose()
       @editorSubs.add @editor.onDidStopChanging(@updateList)
       @updateList()
-    else
-      @clearScenes()
-
 
   # SORTABLE LIST MANAGEMENT #
 
@@ -244,7 +243,7 @@ class FountainOutlineView extends ScrollView
         # element moved, so generate new buffer contents #
         newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
         newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
-        @setActiveEditorBuffer(newFileText)
+        @editor?.setText(newFileText)
       else
         # update view manually since nothing changed
         @updateList()
@@ -325,8 +324,3 @@ class FountainOutlineView extends ScrollView
 
     newFileText = textBefore.concat(textAfter).join('\n')
     newFileText
-
-  setActiveEditorBuffer: (newFileText) =>
-    if editor = atom.workspace.getActiveTextEditor()
-      @editor = editor
-      @editor.setText(newFileText)
