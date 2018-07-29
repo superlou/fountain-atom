@@ -10,12 +10,19 @@ class FountainOutlineView extends ScrollView
   outlineLocked: true
   eventHandlers: []
 
-  constructor: (serializedState) ->
-    super
+  initialize: (serializedState) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
     @editorSubs = new CompositeDisposable
     @emitter = new Emitter
+
+  attached: ->
+    @subscriptions.add atom.tooltips.add(@find('#scenes_visible_button'), {
+      title: 'Include scenes'}
+    )
+    @subscriptions.add atom.tooltips.add(@find('#draggable_button'), {
+      title: 'Enable outline dragging'
+    })
 
   destroy: ->
     @emitter.emit 'closed-outline-view'
@@ -40,7 +47,7 @@ class FountainOutlineView extends ScrollView
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'block controls', =>
         @div class: 'btn-group', =>
-          @button class: 'btn', id: 'scenes_visible_btn', "Scenes"
+          @button class: 'btn', id: 'scenes_visible_button', "Scenes"
           @button class: 'btn', id: 'draggable_button', "Draggable"
         @button class: 'btn icon icon-file-pdf pdf-download-button', 'PDF'
       @div class: 'outline block', =>
@@ -75,7 +82,7 @@ class FountainOutlineView extends ScrollView
 
     @scenesHidden ||= false
     @setScenesHidden(@scenesHidden)
-    showScenesHandler = $("#scenes_visible_btn").on 'click', (e) =>
+    showScenesHandler = $("#scenes_visible_button").on 'click', (e) =>
         @scenesHidden = !@scenesHidden
         @setScenesHidden(@scenesHidden)
 
@@ -95,7 +102,7 @@ class FountainOutlineView extends ScrollView
 
   setScenesHidden: (hidden) =>
     $('li.scene').toggle(!hidden)
-    $('#scenes_visible_btn').toggleClass('selected', !hidden)
+    $('#scenes_visible_button').toggleClass('selected', !hidden)
 
   setOutlineLocked: (locked, sortable) =>
     sortable.option("disabled", locked);
