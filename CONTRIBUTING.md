@@ -13,11 +13,10 @@ Fountain files to support testing can be found in the `spec/test_files` director
 First of all, you have to fork the repository.  
 
 **Mac or Linux**  
-`cd your/project/folder` *Go to your project folder*  
-`git clone https://github.com/YourPseudo/fountain-atom.git` *Clone your forked repository in the current folder*  
-`cd atom-fountain` *Go to the cloned folder*  
-`apm install` *Install all dependencies*     
-`apm -d link` *Link the project with atom for development mode*    
-`atom -d .` *Open the project with atom in development mode*   
+`apm develop fountain` *Atom clones the fountain repository in `~/github/fountain` and links it for development mode*  
+`cd ~/github/fountain` *Go to the cloned folder*  
+`git remote rename origin upstream` *Rename the source repository as upstream*  
+`git remote add origin https://github.com/YourPseudo/fountain-atom.git` *Set your forked repository as origin*     
+`atom -d .` *Open the fountain package in atom's development mode*
 
-After every change you make, you need to do  `View->Developer->Reload Window` to see them applied.
+After every change you make, you need to do `View->Developer->Reload Window` to see them applied.
