@@ -92,7 +92,8 @@ class FountainOutlineView extends ScrollView
         @setOutlineLocked(@outlineLocked, sortable)
 
     downloadHandler = $(".pdf-download-button").on 'click', (e) =>
-        atom.packages.getActivePackage('fountain').mainModule.pdfExport();
+      if @editor?
+        atom.packages.getActivePackage('fountain').mainModule.pdfExport(@editor);
 
     @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
 

@@ -196,8 +196,15 @@ module.exports = Fountain =
     return unless editor.getGrammar().scopeName == 'source.fountain'
     @addPreviewForEditor(editor)
 
+  editorOrActiveEditor: (editor) ->
+    if editor? then editor else atom.workspace.getActiveTextEditor()
+
   pdfPreview: (event) ->
     activeEditor = atom.workspace.getActiveTextEditor()
+    unless activeEditor.getGrammar().scopeName == 'source.fountain'
+      atom.notifications.addInfo("No fountain file is currently targeted")
+      return
+
     if event || activeEditor
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
@@ -209,8 +216,12 @@ module.exports = Fountain =
     else
       atom.notifications.addInfo("No fountain file is currently targeted")
 
-  pdfExport: ->
-    activeEditor = atom.workspace.getActiveTextEditor()
+  pdfExport: (editor) ->
+    activeEditor = @editorOrActiveEditor(editor)
+    unless activeEditor.getGrammar().scopeName == 'source.fountain'
+      atom.notifications.addInfo("No fountain file is currently targeted")
+      return
+
     if (activeEditor)
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
