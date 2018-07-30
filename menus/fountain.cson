@@ -16,6 +16,10 @@
           'label': 'Show Preview'
           'command': 'fountain:preview'
         }
+        {
+          'label': 'Export PDF'
+          'command': 'fountain:export-PDF'
+        }
       ]
     ]
   }
