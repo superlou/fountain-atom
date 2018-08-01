@@ -194,6 +194,10 @@ class FountainOutlineView extends ScrollView
         else
           break
       else if arr[i].match(/(^EXT\.)|(^INT\.)|(^\.[A-Z]+)|(^\s*=\s*.+)/)
+        # Remove leading period if forcing a scene
+        if arr[i][0] == "."
+          arr[i] = arr[i].substr(1)
+
         currentScene =
           line: i
           title: arr[i]
