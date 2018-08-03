@@ -1,4 +1,4 @@
-{CompositeDisposable, Point} = require 'atom'
+{CompositeDisposable, Point, Emitter} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 
 module.exports =
@@ -7,47 +7,53 @@ class FountainOutlineView extends ScrollView
   Sortable = require('sortablejs')
   _ = require('underscore-plus')
 
-  panel: null
   outlineLocked: true
   eventHandlers: []
 
-  initialize: (state) ->
-    super
+  initialize: (serializedState) ->
     @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedPane)
-
+    @subscriptions.add atom.workspace.onDidChangeActivePaneItem(@changedActiveItem)
     @editorSubs = new CompositeDisposable
+    @emitter = new Emitter
 
-    @attach()
-
-  attach: ->
-    @panel ?= atom.workspace.addRightPanel {
-      item: this
-      visible: false
-    }
-
-  @content: ->
-    @div class: 'fountain-outline-view', tabindex: -1, =>
-      @div class: 'panel-heading', =>
-        @a class: 'outline-lock', =>
-          @span id: 'outlineLock', class: 'icon icon-lock'
-          @span id: 'outlineUnlocked', class: 'outline-lock-overlay-icon icon icon-remove-close'
-        @div class: 'panel-heading-text', "Fountain Outline"
-        @a class: 'pdf-download-button', =>
-          @span id: 'pdfDownload', class: 'icon icon-file-pdf'
-        @div class: 'show-scenes-box', =>
-          @label for: 'showScenesCheckbox', "Hide Scenes:"
-          @input id: 'showScenesCheckbox', type: 'checkbox'
-      @div class: 'panel-body', =>
-        @ul class: 'outline-list', outlet: "list"
-
-  serialize: ->
+  attached: ->
+    @subscriptions.add atom.tooltips.add(@find('#scenes_visible_button'), {
+      title: 'Include scenes'}
+    )
+    @subscriptions.add atom.tooltips.add(@find('#draggable_button'), {
+      title: 'Enable outline dragging'
+    })
 
   destroy: ->
+    @emitter.emit 'closed-outline-view'
     @clearEventHandlers()
     @subscriptions.dispose()
     @editorSubs.dispose()
     @element.remove()
+
+  getTitle: ->
+    'Fountain Outline'
+
+  getDefaultLocation: ->
+    'right'
+
+  getURI: ->
+    'atom://fountain-outline'
+
+  getElement: ->
+    @element
+
+  @content: ->
+    @div class: 'fountain-outline-view', tabindex: -1, =>
+      @div class: 'block controls', =>
+        @div class: 'btn-group', =>
+          @button class: 'btn', id: 'scenes_visible_button', "Scenes"
+          @button class: 'btn', id: 'draggable_button', "Draggable"
+        @button class: 'btn icon icon-file-pdf pdf-download-button', 'PDF'
+      @div class: 'outline block', =>
+        @ul class: 'outline-list', outlet: "list"
+
+  serialize: ->
 
   updateList: =>
     text = @editor.getText()
@@ -61,60 +67,53 @@ class FountainOutlineView extends ScrollView
 
     @list.append(tempList)
 
-    sortable = @createSortableList(text, scenes)
+    # if we haven't lost track of the file, continue
+    #  else clear out the list contents
+    if (document.getElementsByClassName('outline-ul')[0])
 
-    # EVENT HANDLER MANAGEMENT #
+      sortable = @createSortableList(text, scenes)
 
-    @clearEventHandlers()
+      # EVENT HANDLER MANAGEMENT #
+      @clearEventHandlers()
 
-    jumpToHandler = $(".outline-item")
-      .on 'click', (e) =>
-        line = parseInt($(e.currentTarget).attr('data-line'))
+      jumpToHandler = $(".outline-item").on 'click', (e) =>
+          line = parseInt($(e.currentTarget).attr('data-line'))
+          position = new Point(line, -1)
+          @editor.scrollToBufferPosition(position)
+          @editor.setCursorBufferPosition(position)
+          @editor.moveToFirstCharacterOfLine()
 
-        position = new Point(line, -1)
-        @editor.scrollToBufferPosition(position)
-        @editor.setCursorBufferPosition(position)
-        @editor.moveToFirstCharacterOfLine()
+      @scenesHidden ||= false
+      @setScenesHidden(@scenesHidden)
+      showScenesHandler = $("#scenes_visible_button").on 'click', (e) =>
+          @scenesHidden = !@scenesHidden
+          @setScenesHidden(@scenesHidden)
 
-    @scenesHidden ||= false
-    @setSceneHiddenState()
-    showScenesHandler = $("#showScenesCheckbox")
-      .on 'click', (e) =>
-        if e.currentTarget.checked
-          @scenesHidden = true
-        else
-          @scenesHidden = false
-        @setSceneHiddenState()
+      @setOutlineLocked(@outlineLocked, sortable)
+      outlineLockHandler = $("#draggable_button").on 'click', (e) =>
+          @outlineLocked = !@outlineLocked
+          @setOutlineLocked(@outlineLocked, sortable)
 
-    sortable.option("disabled", @outlineLocked)
-    @setOutlineLockIconState()
-    outlineLockHandler = $(".outline-lock")
-      .on 'click', (e) =>
-        @outlineLocked = !@outlineLocked
-        @setOutlineLockIconState()
-        sortable.option("disabled", @outlineLocked);
+      downloadHandler = $(".pdf-download-button").on 'click', (e) =>
+        if @editor?
+          atom.packages.getActivePackage('fountain').mainModule.pdfExport(@editor);
 
-    downloadHandler = $(".pdf-download-button")
-      .on 'click', (e) =>
-        atom.packages.getActivePackage('fountain').mainModule.pdfExport();
+      @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
 
-    @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
+    else
+      @list.empty()
 
   clearEventHandlers: () ->
     _.each(@eventHandlers, (handler) -> handler.off())
     @eventHandlers = []
 
-  setSceneHiddenState: () =>
-    if (@scenesHidden)
-      $('li.scene').hide()
-    else
-      $('li.scene').show()
+  setScenesHidden: (hidden) =>
+    $('li.scene').toggle(!hidden)
+    $('#scenes_visible_button').toggleClass('selected', !hidden)
 
-  setOutlineLockIconState: () =>
-    if (@outlineLocked)
-      $('.outline-lock-overlay-icon').css("visibility", "hidden");
-    else
-      $('.outline-lock-overlay-icon').css("visibility", "visible");
+  setOutlineLocked: (locked, sortable) =>
+    sortable.option("disabled", locked);
+    $('#draggable_button').toggleClass('selected', !locked)
 
   formatList: (formatted, scenes) ->
     for scene, index in scenes
@@ -217,24 +216,21 @@ class FountainOutlineView extends ScrollView
     out = [out,i, depth]
     out
 
+  clearScenes: () ->
+    @list.empty()
 
-  clearScenes: (text) ->
-    @list.innerHTML = ""
+  changedActiveItem: (item) =>
+    grammarId = item?.getGrammar?().id
 
-  changedPane: (pane) =>
-    @editorSubs.dispose()
-    if pane and (typeof pane.getText == 'function')
-      @editor = pane
+    if grammarId == 'source.fountain'
+      @editor = item
+      @editorSubs.dispose()
       @editorSubs.add @editor.onDidStopChanging(@updateList)
       @updateList()
-    else
-      @clearScenes()
-
 
   # SORTABLE LIST MANAGEMENT #
 
   createSortableList: (fileText, scenes) =>
-
     outlineElement = document.getElementsByClassName('outline-ul')[0];
     oldFileLines = fileText.split('\n')
     flatSceneList = @flatten(scenes, [])
@@ -256,7 +252,7 @@ class FountainOutlineView extends ScrollView
         # element moved, so generate new buffer contents #
         newStartLine = @getNewStartLineIndex(oldFileLines, sceneList, oldIndex, newIndex)
         newFileText = @getNewFileText(oldFileLines, oldStartLine, oldEndLine, newStartLine)
-        @setActiveEditorBuffer(newFileText)
+        @editor?.setText(newFileText)
       else
         # update view manually since nothing changed
         @updateList()
@@ -337,8 +333,3 @@ class FountainOutlineView extends ScrollView
 
     newFileText = textBefore.concat(textAfter).join('\n')
     newFileText
-
-  setActiveEditorBuffer: (newFileText) =>
-    if editor = atom.workspace.getActiveTextEditor()
-      @editor = editor
-      @editor.setText(newFileText)

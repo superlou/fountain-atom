@@ -1,9 +1,9 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Disposable} = require 'atom'
 url = require 'url'
 PdfConverter = require './fountain-pdf-converter.coffee'
 
-FountainOutlineView = null
 FountainPreviewView = null
+FountainOutlineView = null
 renderer = null
 
 createFountainPreviewView = (state) ->
@@ -13,6 +13,10 @@ createFountainPreviewView = (state) ->
 isFountainPreviewView = (object) ->
   FountainPreviewView ?= require './fountain-preview-view'
   object instanceof FountainPreviewView
+
+createFountainOutlineView = () ->
+  FountainOutlineView ?= require './fountain-outline-view.coffee'
+  new FountainOutlineView();
 
 module.exports = Fountain =
 
@@ -144,12 +148,16 @@ module.exports = Fountain =
   subscriptions: null
 
   activate: (state) ->
-
     require('atom-package-deps').install('fountain', true)
 
     # Events subscribed to in atom's system can be easily cleaned up with
     # a CompositeDisposable
     @subscriptions = new CompositeDisposable
+
+    # Add an opener, command, and diposable for the test view
+    @subscriptions.add atom.workspace.addOpener (uri) ->
+      if uri == 'atom://fountain-outline'
+        return createFountainOutlineView();
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
@@ -157,9 +165,6 @@ module.exports = Fountain =
       'fountain:preview-legacy' :=> @preview(),  # deprecated TODO: remove in a later release
       'fountain:preview' :=> @pdfPreview(),
       'fountain:export-PDF' :=> @pdfExport()
-
-    if state.outlineViewIsVisible
-      @toggleOutlineView()
 
     atom.workspace.addOpener (uri) ->
       try
@@ -179,25 +184,17 @@ module.exports = Fountain =
       else
         createFountainPreviewView(filePath: pathname)
 
+  toggleOutlineView: ->
+    atom.workspace.toggle('atom://fountain-outline')
+
   deactivate: ->
     @subscriptions.dispose()
 
   serialize: ->
-    outlineViewIsVisible: @outlineView && @outlineView.panel.isVisible()
+    {}
 
   deserializeFountainPreviewView: (state) ->
     createFountainPreviewView(state) if state.constructor is Object
-
-  toggleOutlineView: ->
-    FountainOutlineView ?= require './fountain-outline-view'
-    @outlineView ?= new FountainOutlineView({})
-
-    if @outlineView.panel.isVisible()
-      @outlineView.panel.hide()
-    else
-      editor = atom.workspace.getActiveTextEditor()
-      @outlineView.changedPane(editor)
-      @outlineView.panel.show()
 
   preview: ->
     editor = atom.workspace.getActiveTextEditor()
@@ -205,8 +202,15 @@ module.exports = Fountain =
     return unless editor.getGrammar().scopeName == 'source.fountain'
     @addPreviewForEditor(editor)
 
+  editorOrActiveEditor: (editor) ->
+    if editor? then editor else atom.workspace.getActiveTextEditor()
+
   pdfPreview: (event) ->
     activeEditor = atom.workspace.getActiveTextEditor()
+    unless activeEditor.getGrammar().scopeName == 'source.fountain'
+      atom.notifications.addInfo("No fountain file is currently targeted")
+      return
+
     if event || activeEditor
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
@@ -218,8 +222,12 @@ module.exports = Fountain =
     else
       atom.notifications.addInfo("No fountain file is currently targeted")
 
-  pdfExport: ->
-    activeEditor = atom.workspace.getActiveTextEditor()
+  pdfExport: (editor) ->
+    activeEditor = @editorOrActiveEditor(editor)
+    unless activeEditor.getGrammar().scopeName == 'source.fountain'
+      atom.notifications.addInfo("No fountain file is currently targeted")
+      return
+
     if (activeEditor)
       activeEditorPath = activeEditor.getPath()
       if !activeEditorPath
