@@ -55,7 +55,6 @@ class FountainOutlineView extends ScrollView
 
   serialize: ->
 
-
   updateList: =>
     text = @editor.getText()
     scenes = @findScenes(text)
@@ -194,6 +193,10 @@ class FountainOutlineView extends ScrollView
         else
           break
       else if arr[i].match(/(^EXT\.)|(^INT\.)|(^\.[A-Z]+)|(^\s*=\s*.+)/)
+        # Remove leading period if forcing a scene
+        if arr[i][0] == "."
+          arr[i] = arr[i].substr(1)
+
         currentScene =
           line: i
           title: arr[i]
@@ -213,7 +216,6 @@ class FountainOutlineView extends ScrollView
     out = [out,i, depth]
     out
 
-
   clearScenes: () ->
     @list.empty()
 
@@ -229,7 +231,6 @@ class FountainOutlineView extends ScrollView
   # SORTABLE LIST MANAGEMENT #
 
   createSortableList: (fileText, scenes) =>
-
     outlineElement = document.getElementsByClassName('outline-ul')[0];
     oldFileLines = fileText.split('\n')
     flatSceneList = @flatten(scenes, [])
