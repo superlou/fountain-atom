@@ -68,34 +68,41 @@ class FountainOutlineView extends ScrollView
 
     @list.append(tempList)
 
-    sortable = @createSortableList(text, scenes)
+    # if we haven't lost track of the file, continue
+    #  else clear out the list contents
+    if (document.getElementsByClassName('outline-ul')[0])
 
-    # EVENT HANDLER MANAGEMENT #
-    @clearEventHandlers()
+      sortable = @createSortableList(text, scenes)
 
-    jumpToHandler = $(".outline-item").on 'click', (e) =>
-        line = parseInt($(e.currentTarget).attr('data-line'))
-        position = new Point(line, -1)
-        @editor.scrollToBufferPosition(position)
-        @editor.setCursorBufferPosition(position)
-        @editor.moveToFirstCharacterOfLine()
+      # EVENT HANDLER MANAGEMENT #
+      @clearEventHandlers()
 
-    @scenesHidden ||= false
-    @setScenesHidden(@scenesHidden)
-    showScenesHandler = $("#scenes_visible_button").on 'click', (e) =>
-        @scenesHidden = !@scenesHidden
-        @setScenesHidden(@scenesHidden)
+      jumpToHandler = $(".outline-item").on 'click', (e) =>
+          line = parseInt($(e.currentTarget).attr('data-line'))
+          position = new Point(line, -1)
+          @editor.scrollToBufferPosition(position)
+          @editor.setCursorBufferPosition(position)
+          @editor.moveToFirstCharacterOfLine()
 
-    @setOutlineLocked(@outlineLocked, sortable)
-    outlineLockHandler = $("#draggable_button").on 'click', (e) =>
-        @outlineLocked = !@outlineLocked
-        @setOutlineLocked(@outlineLocked, sortable)
+      @scenesHidden ||= false
+      @setScenesHidden(@scenesHidden)
+      showScenesHandler = $("#scenes_visible_button").on 'click', (e) =>
+          @scenesHidden = !@scenesHidden
+          @setScenesHidden(@scenesHidden)
 
-    downloadHandler = $(".pdf-download-button").on 'click', (e) =>
-      if @editor?
-        atom.packages.getActivePackage('fountain').mainModule.pdfExport(@editor);
+      @setOutlineLocked(@outlineLocked, sortable)
+      outlineLockHandler = $("#draggable_button").on 'click', (e) =>
+          @outlineLocked = !@outlineLocked
+          @setOutlineLocked(@outlineLocked, sortable)
 
-    @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
+      downloadHandler = $(".pdf-download-button").on 'click', (e) =>
+        if @editor?
+          atom.packages.getActivePackage('fountain').mainModule.pdfExport(@editor);
+
+      @eventHandlers.push(jumpToHandler, showScenesHandler, outlineLockHandler, downloadHandler)
+
+    else
+      @list.empty()
 
   clearEventHandlers: () ->
     _.each(@eventHandlers, (handler) -> handler.off())
