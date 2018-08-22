@@ -32,7 +32,7 @@ class FountainOutlineView extends ScrollView
     @element.remove()
 
   getTitle: ->
-    'Fountain Outline'
+    '场景及大纲'
 
   getDefaultLocation: ->
     'right'
@@ -47,9 +47,8 @@ class FountainOutlineView extends ScrollView
     @div class: 'fountain-outline-view', tabindex: -1, =>
       @div class: 'block controls', =>
         @div class: 'btn-group', =>
-          @button class: 'btn', id: 'scenes_visible_button', "Scenes"
-          @button class: 'btn', id: 'draggable_button', "Draggable"
-        @button class: 'btn icon icon-file-pdf pdf-download-button', 'PDF'
+          @button class: 'btn', id: 'scenes_visible_button', "场景"
+          @button class: 'btn', id: 'draggable_button', "可拖拽"
       @div class: 'outline block', =>
         @ul class: 'outline-list', outlet: "list"
 
@@ -192,7 +191,7 @@ class FountainOutlineView extends ScrollView
           out.push currentScene
         else
           break
-      else if arr[i].match(/(^EXT\.)|(^INT\.)|(^\.[A-Z]+)|(^\s*=\s*.+)/)
+      else if arr[i].match(/(^EXT\.)|(^INT\.)|(^\.[A-Z\u2E80-\u9FFF]+)|(^\s*=\s*.+)/)
         # Remove leading period if forcing a scene
         if arr[i][0] == "."
           arr[i] = arr[i].substr(1)

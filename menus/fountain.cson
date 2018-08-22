@@ -9,16 +9,8 @@
       'label': 'Fountain'
       'submenu': [
         {
-          'label': 'Toggle Outline View'
+          'label': '显示/隐藏 大纲视图'
           'command': 'fountain:toggle-outline-view'
-        }
-        {
-          'label': 'Show Preview'
-          'command': 'fountain:preview'
-        }
-        {
-          'label': 'Export PDF'
-          'command': 'fountain:export-PDF'
         }
       ]
     ]
