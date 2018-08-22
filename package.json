@@ -1,14 +1,14 @@
 {
-  "name": "fountain",
+  "name": "fountain-zh",
   "main": "./lib/fountain",
   "version": "0.8.0",
-  "description": "Grammar and tools for the Fountain screenwriting syntax",
+  "description": "基于 superlou/fountain-atom 修改，针对中文做了部分优化",
   "deserializers": {
     "FountainPreviewView": "deserializeFountainPreviewView"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/superlou/fountain-atom.git"
+    "url": "https://github.com/leeyupeng/fountain-atom.git"
   },
   "license": "GPLv3",
   "engines": {
@@ -23,13 +23,12 @@
     "sortablejs": "^1.6.1"
   },
   "package-deps": [
-    "pdf-view:0.59.0"
   ],
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/superlou/fountain-atom/issues"
+    "url": "https://github.com/leeyupeng/fountain-atom/issues"
   },
-  "homepage": "https://github.com/superlou/fountain-atom#readme",
+  "homepage": "https://github.com/leeyupeng/fountain-atom#readme",
   "devDependencies": {
     "atom-grammar-test": "^0.6.4"
   }
