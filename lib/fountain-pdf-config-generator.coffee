@@ -10,10 +10,10 @@ class PdfConfigGenerator
     configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
 
     configs = atom.config.get('fountain')
-    flatConfigs = _.flatten(configs)
     completeConfig = {}
-    _.each flatConfigs, (config) =>
-      _.extend(completeConfig, config)
+    for subconfig in _.values(configs)
+      _.extend(completeConfig, subconfig)
+
     jsonConfig = JSON.stringify(completeConfig, null, 1)
 
     writeConfigFile = () =>
