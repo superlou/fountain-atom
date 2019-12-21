@@ -171,3 +171,20 @@ describe 'Fountain Outline View', ->
 
     it 'should be able to flatten massive nested scene list', ->
       expect(@fov.flatten(NESTED_SCENE_LIST, [])).toEqual(FLATTENED_SCENE_LIST)
+
+
+  describe 'formatting with page breaks', ->
+    @fov
+    @fileText
+
+    beforeEach ->
+      @fov = new FountainOutlineView()
+      packagePath = atom.packages.resolvePackagePath('fountain')
+      fileToRead = path.join(packagePath, 'spec/test_files/outline-view-page-break-tests.fountain')
+      @fileText = fs.readFileSync(fileToRead, 'utf8')
+
+    it 'should not include page break "==="', ->
+      section1_children = @fov.findScenes(@fileText)[0].children
+      expect(section1_children.length).toEqual(2)
+      expect(section1_children[0].title).toEqual('Steve washes his car')
+      expect(section1_children[1].title).toEqual('INT. CAR WASH')
