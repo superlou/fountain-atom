@@ -1,7 +1,7 @@
 {
   "name": "fountain",
   "main": "./lib/fountain",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Grammar and tools for the Fountain screenwriting syntax",
   "deserializers": {
     "FountainPreviewView": "deserializeFountainPreviewView"
