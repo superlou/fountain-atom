@@ -87,4 +87,16 @@ The scene starts.
 =this synopses is sloppy and doesn't have a space after the equal sign.
 /*^ comment.synopses.fountain */
 
-More scene description continues here.
+Paul and Steve throw rocks at each other.
+
+He throws a rock as hard as he can...
+/*^ only:(source.fountain meta.paragraph.text) */
+
+...but misses. This is not a scene heading, even with the leading period.
+/*^ only:(source.fountain meta.paragraph.text) */
+
+STEVE
+Missed me!
+
+.FORCE A SCENE WITH NON-ÜS CHARACTER #123A#
+/*^ entity.name.heading.scene.fountain */

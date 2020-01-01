@@ -236,7 +236,7 @@
   }
 
   'scene_headings': {
-    'match': '^\\s*(\\..*?|(?:INT|int|EXT|ext|EST|est|INT|int\\.\/EXT|ext|INT|int\/EXT|ext|I\/E|i/e)(?:\\.| ))(.*?)(?<!  )(#[A-Za-z0-9\\-.]+#)?$'
+    'match': '^\\s*(\\.|(?:INT|int|EXT|ext|EST|est|INT|int\\.\/EXT|ext|INT|int\/EXT|ext|I\/E|i\/e)(?:\\.| ))([^.].*?)(?<!  )(#[A-Za-z0-9\\-.]+#)?$'
     'captures': {
       1: { 'name': 'keyword.other.heading.scene.fountain' }
       2: { 'name': 'entity.name.heading.scene.fountain' }
