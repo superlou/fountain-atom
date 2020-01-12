@@ -192,7 +192,7 @@ class FountainOutlineView extends ScrollView
           out.push currentScene
         else
           break
-      else if arr[i].match(/^===.*$/)
+      else if arr[i].match(/^===+$/)
         # Advance on page break
         i++
       else if arr[i].match(/(^EXT\.)|(^INT\.)|(^\.[A-Z]+)|(^\s*=\s*.+)/)
@@ -206,12 +206,16 @@ class FountainOutlineView extends ScrollView
           type: "scene"
           hasNote: false
           depth: depth
-        if arr[i].match(/^\s*=\s*/)
-          synMatched = arr[i].match(/^\s*=\s*(.+)/)
+
+        synMatched = arr[i].match(/^=\s*([^\n=].*)/)
+
+        if synMatched
           currentScene.title = synMatched[1]
           currentScene.type = "synopsis"
+
         if arr[i].match(/\[\[[^\]]*\]\]/)
           currentScene.hasNote = true
+
         out.push currentScene
         i++
       else
