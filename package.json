@@ -23,7 +23,7 @@
     "sortablejs": "^1.6.1"
   },
   "package-deps": [
-    "pdf-view:0.59.0"
+    "pdf-view-plus:1.11.0"
   ],
   "readmeFilename": "README.md",
   "bugs": {
