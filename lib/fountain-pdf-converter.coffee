@@ -46,7 +46,15 @@ class PdfConverter
     afterwritingPath = path.join(packagePath, "node_modules", "afterwriting", "awc.js")
     outputFullPath = path.join("#{if isPreview then packageTempPath else parsedPath.dir}", "#{if isPreview then '(preview) ' else ''}#{parsedPath.name}.pdf")
     configPath = path.join(packagePath, "configs", "afterwritingConfig.json")
-    fontsPath = path.join(packagePath, "configs", "afterwritingFonts.json")
+
+    fontPathMap =
+      AnonymousPro: 'font-anonymous-pro.js'
+      CourierCode: 'font-courier-code.js'
+      CourierPrime: 'font-courier-prime.js'
+      GNUTypewriter: 'font-gnu-typewriter.js'
+
+    fontFamily = atom.config.get('fountain').settings5.font_family
+    fontsPath = path.join(packagePath, "configs", fontPathMap[fontFamily])
 
     notifyBegin = () =>
       if isPreview

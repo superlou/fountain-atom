@@ -15,12 +15,12 @@
     "atom": ">=1.17.0 <2.0.0"
   },
   "dependencies": {
+    "afterwriting": "^1.17.2",
     "atom-package-deps": "^4.6.0",
     "atom-space-pen-views": "^2.0.0",
+    "sortablejs": "^1.12.0",
     "underscore-plus": "^1.0.0",
-    "xregexp": "^3.1.1",
-    "afterwriting": "^1.11.0",
-    "sortablejs": "^1.6.1"
+    "xregexp": "^3.1.1"
   },
   "package-deps": [
     "pdf-view:0.59.0"
