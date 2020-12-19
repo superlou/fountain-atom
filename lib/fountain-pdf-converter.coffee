@@ -24,15 +24,21 @@ class PdfConverter
       try
         # make cross-platform for the overwrite check
         fs.readFileSync(path.join(parsedPath.dir, "#{parsedPath.name}.pdf"))
-        choice = atom.confirm
+
+        options =
           message: "File exists..."
-          detailedMessage: "File #{parsedPath.name}.pdf already exists.  Would you like to overwrite?"
+          detail: "File #{parsedPath.name}.pdf already exists.  Would you like to overwrite?"
           buttons: ["Yes", "No"]
-        if choice == 0
-          @toFile(parsedPath, fileText, isPreview)
-        else
-          Promise.resolve()
+
+        return new Promise (resolve, reject) =>
+          atom.confirm options, (button_index) =>
+            if button_index == 0
+              @toFile(parsedPath, fileText, isPreview).then (path) =>
+                return resolve(path)
+            else
+              resolve()
       catch err
+        console.log err
         @toFile(parsedPath, fileText, isPreview)
 
   toFile: (parsedPath, fileText, isPreview=false) ->
